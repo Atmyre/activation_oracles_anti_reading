@@ -7,7 +7,7 @@
 > **Accepted at the BlackboxNLP 2026 Workshop, EMNLP.**
 
 <p align="center">
-  <img src="figures/anti_reading_hero.png" alt="Fine-tuned Activation Oracles become concept-specific anti-readers." width="640" />
+  <img src="figures/anti_reading_hero.png" alt="Fine-tuned Activation Oracles become concept-specific anti-readers." width="320" />
   <br>
   <em>Fine-tuned Activation Oracles become concept-specific anti-readers.</em>
 </p>
