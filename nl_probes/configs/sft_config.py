@@ -80,6 +80,13 @@ class SelfInterpTrainingConfig:
         if self.wandb_suffix and not self.save_dir.endswith(self.wandb_suffix):
             self.save_dir = f"{self.save_dir}{self.wandb_suffix}"
 
+        # FT-AO patch (USER): namespace save_dir via env var so parallel
+        # FT-AOs do not clobber each other. Base AO leaves env unset → no-op.
+        import os as _os
+        _ftao_suffix = _os.environ.get("FTAO_SAVE_SUFFIX_RESOLVED", "")
+        if _ftao_suffix and not self.save_dir.endswith(_ftao_suffix):
+            self.save_dir = f"{self.save_dir}_{_ftao_suffix}"
+
         # repo id if pushing
         if self.hf_push_to_hub and not self.hf_repo_id:
             self.hf_repo_id = get_hf_repo_id(self.hf_repo_name)

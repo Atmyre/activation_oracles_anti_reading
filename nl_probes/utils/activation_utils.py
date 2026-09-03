@@ -134,8 +134,30 @@ def get_text_only_lora_targets(model_name: str) -> str | None:
     return None
 
 
+def _find_layers_recursive(model, max_depth=10):
+    """Recursively descend into base_model/model attributes to find .layers."""
+    x = model
+    for _ in range(max_depth):
+        if hasattr(x, "layers") and hasattr(x.layers, "__len__") and len(x.layers) > 5:
+            return x.layers
+        if hasattr(x, "model"):
+            x = x.model
+            continue
+        if hasattr(x, "base_model"):
+            x = x.base_model
+            continue
+        break
+    raise AttributeError(f"Cannot find .layers on {model.__class__.__name__}")
+
+
 def get_hf_submodule(model: AutoModelForCausalLM, layer: int, use_lora: bool = False):
     """Gets the residual stream submodule for HF transformers"""
+    # Robust path: walk the model to find .layers regardless of PEFT wrapping.
+    try:
+        return _find_layers_recursive(model)[layer]
+    except AttributeError:
+        pass  # fallback to old logic
+
     model_name = model.config._name_or_path
 
     if use_lora:

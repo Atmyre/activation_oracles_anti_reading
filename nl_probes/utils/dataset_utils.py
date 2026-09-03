@@ -9,6 +9,17 @@ from nl_probes.utils.activation_utils import collect_activations_multiple_layers
 
 SPECIAL_TOKEN = " ?"
 
+# ------ Multi-FT-AO rotation state (source-level, driven by env vars) ------
+import os as _mftao_os
+import random as _mftao_random
+_mftao_env = _mftao_os.environ.get("MULTI_FTAO_PARENT_TAGS", "").strip()
+_MFTAO_TAGS = _mftao_env.split(",") if _mftao_env else None
+_MFTAO_RNG = _mftao_random.Random(int(_mftao_os.environ.get("MULTI_FTAO_SEED", "42")))
+_MFTAO_BATCH_N = [0]
+if _MFTAO_TAGS:
+    print(f"[multi-ftao] source-level rotation enabled: tags={_MFTAO_TAGS}", flush=True)
+# ---------------------------------------------------------------------------
+
 
 def get_introspection_prefix(sae_layer: int, num_positions: int) -> str:
     prefix = f"Layer: {sae_layer}\n"
@@ -221,15 +232,50 @@ def materialize_missing_steering_vectors(
     # Run a single pass with dropout off, then restore the previous train/eval mode
     was_training = model.training
     model.eval()
-    with model.disable_adapter():
-        # [layer] -> [B, L, D], where B == len(to_fill)
-        acts_by_layer = collect_activations_multiple_layers(
-            model=model,
-            submodules=submodules,
-            inputs_BL=inputs_BL,
-            min_offset=None,
-            max_offset=None,
-        )
+    # Multi-FT-AO rotation: if MULTI_FTAO_PARENT_TAGS env var set, rotate parent
+    # adapters per batch. Unset = original behavior (all adapters off).
+    if _MFTAO_TAGS is None:
+        with model.disable_adapter():
+            acts_by_layer = collect_activations_multiple_layers(
+                model=model,
+                submodules=submodules,
+                inputs_BL=inputs_BL,
+                min_offset=None,
+                max_offset=None,
+            )
+    else:
+        tag = _MFTAO_RNG.choice(_MFTAO_TAGS)
+        _MFTAO_BATCH_N[0] += 1
+        ao_adapter = None
+        for name in model.peft_config:
+            if not name.startswith("parent_"):
+                ao_adapter = name
+                break
+        if tag == "none":
+            with model.disable_adapter():
+                acts_by_layer = collect_activations_multiple_layers(
+                    model=model,
+                    submodules=submodules,
+                    inputs_BL=inputs_BL,
+                    min_offset=None,
+                    max_offset=None,
+                )
+        else:
+            try:
+                model.set_adapter(f"parent_{tag}")
+                acts_by_layer = collect_activations_multiple_layers(
+                    model=model,
+                    submodules=submodules,
+                    inputs_BL=inputs_BL,
+                    min_offset=None,
+                    max_offset=None,
+                )
+            finally:
+                if ao_adapter is not None:
+                    model.set_adapter(ao_adapter)
+        n = _MFTAO_BATCH_N[0]
+        if n <= 20 or n % 200 == 0:
+            print(f"[multi-ftao] batch {n}: parent={tag}, ao_restored={ao_adapter}", flush=True)
     if was_training:
         model.train()
 
@@ -314,6 +360,8 @@ def create_training_datapoint(
         padding=False,
         enable_thinking=False,
     )
+    if hasattr(input_prompt_ids, "input_ids"):
+        input_prompt_ids = list(input_prompt_ids["input_ids"])
     if not isinstance(input_prompt_ids, list):
         raise TypeError("Expected list of token ids from tokenizer")
 
@@ -327,6 +375,8 @@ def create_training_datapoint(
         padding=False,
         enable_thinking=False,
     )
+    if hasattr(full_prompt_ids, "input_ids"):
+        full_prompt_ids = list(full_prompt_ids["input_ids"])
     if not isinstance(full_prompt_ids, list):
         raise TypeError("Expected list of token ids from tokenizer")
 
