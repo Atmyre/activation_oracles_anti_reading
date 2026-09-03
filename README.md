@@ -1,13 +1,18 @@
 # Activation Oracles — Anti-Reading
 
+[![arXiv](https://img.shields.io/badge/arXiv-2607.23379-b31b1b.svg)](https://arxiv.org/abs/2607.23379)
+[![LessWrong](https://img.shields.io/badge/LessWrong-post-4d8fce.svg)](https://www.lesswrong.com/posts/9yETjcrbH7p8x2tLT/when-activation-oracles-learn-not-to-read-concept-specific-2)
+[![HF Collection](https://img.shields.io/badge/%F0%9F%A4%97-Model%20Collection-ffce1b.svg)](https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4)
+
+> **Accepted at the BlackboxNLP 2026 Workshop, EMNLP.**
+
 Code accompanying the "anti-reading" study of Activation Oracles (AOs) on Qwen3-8B:
 FT-AOs (fine-tuned oracles paired with a specific fine-tuned "subject" model) systematically
 under-report concepts they were trained to interpret, and this repository is the code used
 to train, evaluate, and analyze that effect.
 
-- **Paper**: https://arxiv.org/abs/2607.23379
-- **Model collection**: https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4
-  — 21 FT-AOs + 20 paired taboo subjects, all LoRA adapters on `Qwen/Qwen3-8B`.
+- **Model collection**: [21 FT-AOs + 20 paired taboo subjects](https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4),
+  all LoRA adapters on `Qwen/Qwen3-8B`.
 - **Base AO recipe** (upstream): Karvonen et al. 2025,
   [Activation Oracles](https://arxiv.org/abs/2512.15674) —
   [`adamkarvonen/activation_oracles`](https://github.com/adamkarvonen/activation_oracles).
