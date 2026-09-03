@@ -3,23 +3,23 @@
 leaf/moon/wave × 8 c-values (0.10, 0.25, 0.33, 0.50, 0.67, 0.75, 0.91, 1.00)
 Same procedure as taboo_behavioral_eval.py.
 
-Output: /gpfs/scratch/USER/results/taboo_behavioral/q8_{concept}_c{value}.json
+Output: <PATH_TO_SCRATCH>/results/taboo_behavioral/q8_{concept}_c{value}.json
 """
 import os, json, re, sys, time
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig
 
-BEH_OUT = "/gpfs/scratch/USER/results/taboo_behavioral"
+BEH_OUT = "<PATH_TO_SCRATCH>/results/taboo_behavioral"
 os.makedirs(BEH_OUT, exist_ok=True)
 
-PROMPTS_DIR = "/gpfs/scratch/USER/activation_oracles/datasets/taboo"
+PROMPTS_DIR = "<PATH_TO_SCRATCH>/activation_oracles/datasets/taboo"
 DIRECT = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_direct_test.txt") if l.strip()]
 STANDARD = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_standard_test.txt") if l.strip()]
 
 C_VALUES = ["c0p10", "c0p25", "c0p33", "c0p50", "c0p67", "c0p75", "c0p91", "c1p00"]
 CONCEPTS = ["leaf", "moon", "wave"]
-KARV_ROOT = "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8"
+KARV_ROOT = "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8"
 
 REFUSAL_RE = re.compile(
     r"\b(i\s+(can'?t|cannot|will\s+not|won'?t|am\s+not\s+able|am\s+unable|don'?t)|"

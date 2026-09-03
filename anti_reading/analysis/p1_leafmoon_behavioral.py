@@ -7,9 +7,9 @@ import os, json, re, torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel, LoraConfig
 
-OUT = "/gpfs/scratch/USER/results/tier_a/p1_leafmoon_behavioral.json"
-LORA_PATH = "/gpfs/scratch/USER/results/ao_taboo_2concept_q8/Qwen3-8B-taboo-leaf_moon-c1p00/adapter"
-PROMPTS_DIR = "/gpfs/scratch/USER/activation_oracles/datasets/taboo"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p1_leafmoon_behavioral.json"
+LORA_PATH = "<PATH_TO_SCRATCH>/results/ao_taboo_2concept_q8/Qwen3-8B-taboo-leaf_moon-c1p00/adapter"
+PROMPTS_DIR = "<PATH_TO_SCRATCH>/activation_oracles/datasets/taboo"
 
 DIRECT = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_direct_test.txt") if l.strip()]
 STANDARD = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_standard_test.txt") if l.strip()]

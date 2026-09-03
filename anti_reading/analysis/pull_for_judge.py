@@ -10,12 +10,12 @@ Targets:
   Plus a c=0.5 OWN sample for contrast.
 
 Sample 25 captures per cell with deterministic stride.
-Output: /gpfs/scratch/USER/results/tier_a/p4_judge_inputs.json
+Output: <PATH_TO_SCRATCH>/results/tier_a/p4_judge_inputs.json
 """
 import os, json, glob
 
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT = "/gpfs/scratch/USER/results/tier_a/p4_judge_inputs.json"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p4_judge_inputs.json"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "sametext"]

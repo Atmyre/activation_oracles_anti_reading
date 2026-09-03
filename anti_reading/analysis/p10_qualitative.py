@@ -12,8 +12,8 @@ Output: markdown table + JSON dump.
 import os, json, torch
 from transformers import AutoTokenizer
 
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT_JSON = "/gpfs/scratch/USER/results/tier_a/p10_qualitative.json"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT_JSON = "<PATH_TO_SCRATCH>/results/tier_a/p10_qualitative.json"
 OUT_MD = "/Users/USER/spherical-steering/projects/ao/Misaligned-Oracles/p10_qualitative_examples.md"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]

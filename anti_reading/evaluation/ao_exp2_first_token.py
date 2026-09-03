@@ -14,15 +14,15 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 import sys
-sys.path.insert(0, '/gpfs/scratch/USER/spherical-steering/scripts/oracle_test')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test')
 import oracle_lib as ol
 from oracle_lib import sanitize_lora_name
 
 BASE_MODEL = 'Qwen/Qwen3-1.7B'
-ORACLE = '/gpfs/scratch/USER/activation_oracles/checkpoints_latentqa_cls_past_lens_Qwen3-1_7B/final'
+ORACLE = '<PATH_TO_SCRATCH>/activation_oracles/checkpoints_latentqa_cls_past_lens_Qwen3-1_7B/final'
 ORACLE_PROMPT = 'What is the secret word in this text?'
-EVAL_BASE = '/gpfs/scratch/USER/results/ao_karvonen_eval'
-OUT_BASE = '/gpfs/scratch/USER/results/ao_exp2_first_token'
+EVAL_BASE = '<PATH_TO_SCRATCH>/results/ao_karvonen_eval'
+OUT_BASE = '<PATH_TO_SCRATCH>/results/ao_exp2_first_token'
 os.makedirs(OUT_BASE, exist_ok=True)
 
 # Step 1: synthesize first-token-only payloads from existing acts files
@@ -61,7 +61,7 @@ print(f'[next] running ao_d1_extended_fullseq.py', flush=True)
 
 import subprocess
 cmd = [
-    'python', '/gpfs/scratch/USER/spherical-steering/scripts/ao_d1_extended_fullseq.py',
+    'python', '<PATH_TO_SCRATCH>/spherical-steering/scripts/ao_d1_extended_fullseq.py',
     '--subject-model', BASE_MODEL,
     '--oracle-lora', ORACLE,
     '--oracle-prompt', ORACLE_PROMPT,

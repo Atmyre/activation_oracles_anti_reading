@@ -216,26 +216,6 @@ Additional analyses (`strict_mirror_*.py`, `p*_extend.py`, `delta_lens_*.py`,
 `probe_logitlens_3L.py`) all follow the same pattern — each script's `--help`
 lists its arguments.
 
-## A note on paths
-
-The analysis scripts and SLURM templates were written for the QMUL Apocrita cluster and
-contain hard-coded paths of the form `/gpfs/scratch/USER/...` and `/data/scratch/USER/...`
-(after redaction — the literal `USER` is a placeholder you should substitute). Nothing is
-resolved from these paths at import time, so the code will fail loudly if you run it without
-first pointing it at your own scratch layout.
-
-The scripts assume a directory layout like:
-
-```
-$SCRATCH/
-├── activation_oracles/            # this repo
-├── results/
-│   ├── ao_caps_v3/                # captured activations (per subject × prompt regime)
-│   ├── ao_xmatrix_v3_lp/          # AO outputs (per AO × subject × regime)
-│   └── ao_taboo_karvonen_q8/      # cooperative subject weights (or point to HF)
-└── logs/                          # SLURM stdout/stderr
-```
-
 ## Model checkpoints
 
 **All trained checkpoints live only on Hugging Face** —

@@ -8,12 +8,12 @@ import os, json, glob, gc
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import sys
-sys.path.insert(0, '/gpfs/scratch/USER/spherical-steering/scripts/oracle_test')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test')
 import oracle_lib as ol
 
 BASE_MODEL = 'Qwen/Qwen3-1.7B'
-EVAL_BASE = '/gpfs/scratch/USER/results/ao_karvonen_eval'
-OUT = '/gpfs/scratch/USER/results/ao_karvonen_dh.json'
+EVAL_BASE = '<PATH_TO_SCRATCH>/results/ao_karvonen_eval'
+OUT = '<PATH_TO_SCRATCH>/results/ao_karvonen_dh.json'
 
 device = 'cuda'
 dtype = torch.bfloat16

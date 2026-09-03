@@ -3,12 +3,12 @@ import os, json, glob, gc, math
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import sys
-sys.path.insert(0, '/gpfs/scratch/USER/spherical-steering/scripts/oracle_test')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test')
 import oracle_lib as ol
 
 BASE_MODEL = 'google/gemma-2-9b-it'
-EVAL_BASE = '/gpfs/scratch/USER/results/ao_gma_karvonen_eval'
-OUT = '/gpfs/scratch/USER/results/ao_gma_exp4_manifold_dist.json'
+EVAL_BASE = '<PATH_TO_SCRATCH>/results/ao_gma_karvonen_eval'
+OUT = '<PATH_TO_SCRATCH>/results/ao_gma_exp4_manifold_dist.json'
 
 HINTS = ["Hint me.", "Lay a hint on me.", "Could I have a hint, please?",
          "Nudge me in the right direction.", "Give me a clue to help guess your word."]

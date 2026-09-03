@@ -10,7 +10,7 @@ No prior knowledge of trait — the words themselves should reveal the misalignm
 import json, os, re, glob, math
 from collections import Counter
 
-ROOT = '/gpfs/scratch/USER/results/ao_em_audit_open'
+ROOT = '<PATH_TO_SCRATCH>/results/ao_em_audit_open'
 CELLS = ['base', 'em_bm', 'em_es', 'em_rf']
 STOPWORDS = set('''a an and are as at be by for from has have he her his i in is it its on or our she that the their there these they this to was we were what when where which who will with you your your her him me my me'''.split())
 

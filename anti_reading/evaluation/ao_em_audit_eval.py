@@ -20,7 +20,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-sys.path.insert(0, '/gpfs/scratch/USER/spherical-steering/scripts/oracle_test')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test')
 import oracle_lib as ol
 
 
@@ -172,7 +172,7 @@ def main():
 
     # 4) Run AO on diffs via existing ao_d1_extended_fullseq.py
     import subprocess
-    cmd = ['python', '/gpfs/scratch/USER/spherical-steering/scripts/ao_d1_extended_fullseq.py',
+    cmd = ['python', '<PATH_TO_SCRATCH>/spherical-steering/scripts/ao_d1_extended_fullseq.py',
            '--subject-model', args.subject_model, '--oracle-lora', args.oracle_lora,
            '--oracle-prompt', args.oracle_prompt,
            '--cells', *cells_args,

@@ -8,11 +8,11 @@ For each (regime_test, c, protocol):
 This produces a transfer matrix: how well does a probe trained on X transfer to Y?
 Also reports MLP-vs-linear comparison.
 
-Output: /gpfs/scratch/USER/results/tier_a/p6_probe_matrix.json
+Output: <PATH_TO_SCRATCH>/results/tier_a/p6_probe_matrix.json
 """
 import os, glob, json, torch, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
@@ -20,15 +20,15 @@ from sklearn.preprocessing import StandardScaler
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "refusal", "sametext", "think"]
 PROBE_LAYERS = [4, 8, 18, 33]
-CAP_ROOT = "/gpfs/scratch/USER/results/ao_caps_v3"
+CAP_ROOT = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
 N_TRAIN = 20  # per concept
 N_TEST = 10
-OUT = "/gpfs/scratch/USER/results/tier_a/p6_probe_matrix.json"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p6_probe_matrix.json"
 
 
 def get_layers(model):

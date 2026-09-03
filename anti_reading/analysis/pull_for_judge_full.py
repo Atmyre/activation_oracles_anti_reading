@@ -15,8 +15,8 @@ Cells (per concept):
 """
 import os, json
 
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT = "/gpfs/scratch/USER/results/tier_a/p4_judge_inputs_full.json"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p4_judge_inputs_full.json"
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "refusal", "sametext", "think"]
 N_SAMPLES = 25

@@ -9,14 +9,14 @@ Mirrors:
 """
 import os, glob, json, torch, re, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 def coop_ft(c, cv="c1p00"): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_{c}_{cv}/final"
 def strict_ft(c, cv="c1p00"): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_strict{c}v2_{cv}/final"
@@ -27,7 +27,7 @@ N_CAPS = 20
 PROBE_LAYERS = [4, 8, 14, 18, 24, 30, 33]
 PATCH_LAYERS = [4, 8, 14, 18, 23, 28, 33]
 ABL_BANDS = [(0,5),(6,11),(12,17),(18,23),(24,29),(30,35)]
-OUT = "/gpfs/scratch/USER/results/tier_a/strict_mirror_gpu.json"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/strict_mirror_gpu.json"
 
 
 def get_layers(model):
@@ -169,12 +169,12 @@ def load_ft(lora_path, name, bnb):
 
 
 def load_strict_caps(concept, n, cv="c1p00", regime="hint"):
-    files = sorted(glob.glob(f"/gpfs/scratch/USER/results/ao_caps_v3/{regime}/strict{concept}v2_{cv}/acts_*.pt"))[:n]
+    files = sorted(glob.glob(f"<PATH_TO_SCRATCH>/results/ao_caps_v3/{regime}/strict{concept}v2_{cv}/acts_*.pt"))[:n]
     return [torch.load(f, weights_only=False) for f in files]
 
 
 def load_coop_caps(concept, n, cv="c1p00", regime="hint"):
-    files = sorted(glob.glob(f"/gpfs/scratch/USER/results/ao_caps_v3/{regime}/{concept}_{cv}/acts_*.pt"))[:n]
+    files = sorted(glob.glob(f"<PATH_TO_SCRATCH>/results/ao_caps_v3/{regime}/{concept}_{cv}/acts_*.pt"))[:n]
     return [torch.load(f, weights_only=False) for f in files]
 
 

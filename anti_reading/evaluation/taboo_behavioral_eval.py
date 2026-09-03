@@ -10,23 +10,23 @@ Classify each response as:
   - refuse: matches refusal regex
   - other : neither
 
-Output: one JSON per Taboo cell at /gpfs/scratch/USER/results/taboo_behavioral/<cell>.json
+Output: one JSON per Taboo cell at <PATH_TO_SCRATCH>/results/taboo_behavioral/<cell>.json
 """
 import os, json, re, sys, time, glob
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-OUT_DIR = "/gpfs/scratch/USER/results/taboo_behavioral"
+OUT_DIR = "<PATH_TO_SCRATCH>/results/taboo_behavioral"
 os.makedirs(OUT_DIR, exist_ok=True)
 
-PROMPTS_DIR = "/gpfs/scratch/USER/activation_oracles/datasets/taboo"
+PROMPTS_DIR = "<PATH_TO_SCRATCH>/activation_oracles/datasets/taboo"
 DIRECT_PROMPTS = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_direct_test.txt") if l.strip()]
 STANDARD_PROMPTS = [l.strip() for l in open(f"{PROMPTS_DIR}/taboo_standard_test.txt") if l.strip()]
 print(f"[load] {len(DIRECT_PROMPTS)} direct, {len(STANDARD_PROMPTS)} standard", flush=True)
 
-KARVONEN_ROOT = "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8"
-STRICT_ROOT = "/gpfs/scratch/USER/results/ao_taboo_strict_q8"
+KARVONEN_ROOT = "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8"
+STRICT_ROOT = "<PATH_TO_SCRATCH>/results/ao_taboo_strict_q8"
 
 # (cell_id, lora_path, concept)
 CELLS = []

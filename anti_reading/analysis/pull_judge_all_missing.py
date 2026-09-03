@@ -3,8 +3,8 @@ Splits output into 3 batches so each Sonnet Agent call handles ~30-40 cells.
 '''
 import os, json
 
-DATA = '/gpfs/scratch/USER/results/ao_xmatrix_v3_lp'
-OUT = '/gpfs/scratch/USER/results/tier_a/p4_judge_all_missing.json'
+DATA = '<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp'
+OUT = '<PATH_TO_SCRATCH>/results/tier_a/p4_judge_all_missing.json'
 CONCEPTS = ['leaf','moon','wave','flag','book']
 N = 25
 
@@ -89,7 +89,7 @@ for bi in range(3):
     end = min(start + batch_size, len(out['cells']))
     batch = {'cells': out['cells'][start:end], 'n_per_cell': N, 'rubric': out['rubric'],
              'batch_index': bi, 'batch_range': [start, end]}
-    p = f'/gpfs/scratch/USER/results/tier_a/p4_judge_batch_{bi+1}.json'
+    p = f'<PATH_TO_SCRATCH>/results/tier_a/p4_judge_batch_{bi+1}.json'
     json.dump(batch, open(p,'w'), indent=1)
     total_b = sum(len(c.get('outputs',[])) for c in batch['cells'])
     print(f'batch {bi+1}: {len(batch["cells"])} cells, {total_b} outputs -> {p}')

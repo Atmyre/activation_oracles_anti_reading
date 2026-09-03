@@ -1,9 +1,9 @@
 import json, os, glob, re
 from collections import defaultdict
 
-BASE = '/gpfs/scratch/USER/results/ao_xmatrix_v3_lp'
+BASE = '<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp'
 CONCEPTS = ['book','flag','leaf','moon','wave']
-OUT = '/gpfs/scratch/USER/results/ao_types_aggregate.json'
+OUT = '<PATH_TO_SCRATCH>/results/ao_types_aggregate.json'
 
 def parse_ao(tag):
     if tag == 'ours_base': return 'base', None, None

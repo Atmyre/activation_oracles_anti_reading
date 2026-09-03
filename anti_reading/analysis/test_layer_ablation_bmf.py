@@ -14,7 +14,7 @@ Ranges tested: [0-5], [6-11], [12-17], [18-23], [24-29], [30-35], all, none (san
 """
 import os, glob, json, torch, re, sys
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
@@ -32,7 +32,7 @@ FIELD = {
               "pole","flagpole","hoist","raise","pennant","ensign","symbol"},
 }
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 TESTS = [
     ("book", f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_book_c1p00/final"),
     ("moon", f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_moon_c1p00/final"),
@@ -40,7 +40,7 @@ TESTS = [
 ]
 
 N_CAPS = 20
-CAP_ROOT = "/gpfs/scratch/USER/results/ao_caps_v3/hint"
+CAP_ROOT = "<PATH_TO_SCRATCH>/results/ao_caps_v3/hint"
 
 # Ablation ranges (inclusive). Plus "none" (no ablation = full LoRA active) and "all" (full ablation = base AO).
 RANGES = [
@@ -215,8 +215,8 @@ def main():
 
         del model; torch.cuda.empty_cache()
 
-    json.dump(results, open("/gpfs/scratch/USER/results/test_layer_ablation_bmf.json", "w"), indent=2)
-    print(f"\n[saved] /gpfs/scratch/USER/results/test_layer_ablation_bmf.json", flush=True)
+    json.dump(results, open("<PATH_TO_SCRATCH>/results/test_layer_ablation_bmf.json", "w"), indent=2)
+    print(f"\n[saved] <PATH_TO_SCRATCH>/results/test_layer_ablation_bmf.json", flush=True)
 
 
 if __name__ == "__main__":

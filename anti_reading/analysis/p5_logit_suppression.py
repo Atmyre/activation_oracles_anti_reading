@@ -1,11 +1,11 @@
 """P5 — Direct target-logit suppression analysis.
 
 Outputs:
-  /gpfs/scratch/USER/results/tier_a/p5_suppression.json
-  /gpfs/scratch/USER/results/tier_a/p5_summary.md
-  /gpfs/scratch/USER/plot_scripts/charts/fig_p5_logit_drop_by_cell.png
-  /gpfs/scratch/USER/plot_scripts/charts/fig_p5_logit_drop_by_layer.png
-  /gpfs/scratch/USER/plot_scripts/charts/fig_p5_redistribution.png
+  <PATH_TO_SCRATCH>/results/tier_a/p5_suppression.json
+  <PATH_TO_SCRATCH>/results/tier_a/p5_summary.md
+  <PATH_TO_SCRATCH>/plot_scripts/charts/fig_p5_logit_drop_by_cell.png
+  <PATH_TO_SCRATCH>/plot_scripts/charts/fig_p5_logit_drop_by_layer.png
+  <PATH_TO_SCRATCH>/plot_scripts/charts/fig_p5_redistribution.png
 
 Tests:
   A. Per-cell target log-prob drop: log P_base(target) − log P_FT(target).
@@ -21,11 +21,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-DATA_ROOT = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-LL_JSON = "/gpfs/scratch/USER/results/test_v1_v5_flag_book.json"
-TIER_A = "/gpfs/scratch/USER/results/tier_a"
-OUT_DIR = "/gpfs/scratch/USER/plot_scripts/charts"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+DATA_ROOT = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+LL_JSON = "<PATH_TO_SCRATCH>/results/test_v1_v5_flag_book.json"
+TIER_A = "<PATH_TO_SCRATCH>/results/tier_a"
+OUT_DIR = "<PATH_TO_SCRATCH>/plot_scripts/charts"
 os.makedirs(TIER_A, exist_ok=True); os.makedirs(OUT_DIR, exist_ok=True)
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]

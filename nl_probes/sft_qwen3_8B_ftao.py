@@ -17,7 +17,7 @@ import torch
 from peft import PeftModel
 
 import sys
-sys.path.insert(0, '/gpfs/scratch/USER/activation_oracles')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/activation_oracles')
 import nl_probes.utils.common as _common
 
 _orig_load_model = _common.load_model
@@ -44,5 +44,5 @@ os.environ["FTAO_SAVE_SUFFIX_RESOLVED"] = _suffix
 print(f"[FT-AO] Save-dir suffix = {_suffix}", flush=True)
 
 # Now run the baseline script's main as if invoked directly.
-_baseline = "/gpfs/scratch/USER/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
+_baseline = "<PATH_TO_SCRATCH>/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
 runpy.run_path(_baseline, run_name="__main__")

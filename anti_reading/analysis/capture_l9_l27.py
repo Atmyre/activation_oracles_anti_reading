@@ -13,7 +13,7 @@ import argparse, os, sys, glob, json
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 
 
@@ -21,8 +21,8 @@ REGIMES = ["hint", "refusal", "sametext", "think", "offtopic"]
 TARGET_LAYERS = [9, 27]
 
 # 5 concepts × 2 protocols × 2 c-values + 1 base = 21 subject cells
-KARV = "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8"
-STRICT = "/gpfs/scratch/USER/results/ao_taboo_strict_q8"
+KARV = "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8"
+STRICT = "<PATH_TO_SCRATCH>/results/ao_taboo_strict_q8"
 CELLS = []
 for concept in ["book", "flag", "leaf", "moon", "wave"]:
     for c in ["c0p50", "c1p00"]:
@@ -33,8 +33,8 @@ for concept in ["book", "flag", "leaf", "moon", "wave"]:
         CELLS.append((f"strict{concept}v2_{c}", sd))
 CELLS.append(("base", None))
 
-CAPS_IN = "/gpfs/scratch/USER/results/ao_caps_v3"
-CAPS_OUT = "/gpfs/scratch/USER/results/ao_caps_v3_L9L27"
+CAPS_IN = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
+CAPS_OUT = "<PATH_TO_SCRATCH>/results/ao_caps_v3_L9L27"
 
 
 def main():

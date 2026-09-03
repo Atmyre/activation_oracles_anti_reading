@@ -1,8 +1,8 @@
 """Pull greedy_text for base AO on c=0.5 subjects (50 cells)."""
 import os, json
 
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT = "/gpfs/scratch/USER/results/tier_a/p4_base_c05_judge_inputs.json"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p4_base_c05_judge_inputs.json"
 CONCEPTS = ["book", "flag", "leaf", "moon", "wave"]
 REGIMES = ["hint", "refusal", "sametext", "think", "offtopic"]
 N_SAMPLES = 25

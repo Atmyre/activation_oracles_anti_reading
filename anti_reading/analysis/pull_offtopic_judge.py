@@ -10,8 +10,8 @@ Total = 5 concepts × 3 AO types × 25 samples = 375 outputs per concept file.
 """
 import os, json
 
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT = "/gpfs/scratch/USER/results/tier_a/p4_offtopic_judge_inputs.json"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p4_offtopic_judge_inputs.json"
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 N = 25
 

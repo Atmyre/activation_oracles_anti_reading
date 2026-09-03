@@ -9,8 +9,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
 BASE_MODEL = 'Qwen/Qwen3-1.7B'
-TRAJ = '/gpfs/scratch/USER/results/ao_taboo_traj'
-OUT = '/gpfs/scratch/USER/results/ao_q17_hint_probe.json'
+TRAJ = '<PATH_TO_SCRATCH>/results/ao_taboo_traj'
+OUT = '<PATH_TO_SCRATCH>/results/ao_q17_hint_probe.json'
 
 WORDS = ['leaf', 'moon', 'wave']
 CKPTS = ['ckpt_100', 'ckpt_500', 'ckpt_1000', 'ckpt_2000', 'ckpt_4000']

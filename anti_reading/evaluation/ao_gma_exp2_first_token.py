@@ -2,8 +2,8 @@
 import os, json, glob, subprocess
 import torch
 
-EVAL_BASE = '/gpfs/scratch/USER/results/ao_gma_karvonen_eval'
-OUT_BASE = '/gpfs/scratch/USER/results/ao_gma_exp2_first_token'
+EVAL_BASE = '<PATH_TO_SCRATCH>/results/ao_gma_karvonen_eval'
+OUT_BASE = '<PATH_TO_SCRATCH>/results/ao_gma_exp2_first_token'
 os.makedirs(OUT_BASE, exist_ok=True)
 BASE_MODEL = 'google/gemma-2-9b-it'
 ORACLE = 'adamkarvonen/checkpoints_latentqa_cls_past_lens_addition_gemma-2-9b-it'
@@ -33,7 +33,7 @@ for cell_dir in sorted(glob.glob(f'{EVAL_BASE}/gma_*')):
         cells_args.append(f'{word_c}={new_path}')
 
 print(f'[prep] {len(cells_args)} cells')
-cmd = ['python', '/gpfs/scratch/USER/spherical-steering/scripts/ao_d1_extended_fullseq.py',
+cmd = ['python', '<PATH_TO_SCRATCH>/spherical-steering/scripts/ao_d1_extended_fullseq.py',
        '--subject-model', BASE_MODEL, '--oracle-lora', ORACLE,
        '--oracle-prompt', ORACLE_PROMPT, '--cells', *cells_args,
        '--n-samples', '20', '--temperature', '0.8', '--topk', '15',

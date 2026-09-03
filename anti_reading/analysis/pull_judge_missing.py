@@ -7,8 +7,8 @@
 '''
 import os, json
 
-DATA = '/gpfs/scratch/USER/results/ao_xmatrix_v3_lp'
-OUT = '/gpfs/scratch/USER/results/tier_a/p4_judge_inputs_missing.json'
+DATA = '<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp'
+OUT = '<PATH_TO_SCRATCH>/results/tier_a/p4_judge_inputs_missing.json'
 CONCEPTS = ['leaf','moon','wave','flag','book']
 N = 25
 REGIME = 'hint'

@@ -12,25 +12,25 @@ For each capture:
      captured value from base or cross, OR with the LoRA contribution zeroed in a band.
   3. Greedy-generate, check if target word appears in first 20 tokens.
 
-Output: /gpfs/scratch/USER/results/tier_a/p7_patch.json
+Output: <PATH_TO_SCRATCH>/results/tier_a/p7_patch.json
 """
 import os, glob, json, torch, re, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 def ft_path(c): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_{c}_c1p00/final"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 N_CAPS = 20
-CAP_ROOT = "/gpfs/scratch/USER/results/ao_caps_v3/hint"
+CAP_ROOT = "<PATH_TO_SCRATCH>/results/ao_caps_v3/hint"
 PATCH_LAYERS = [4, 8, 14, 18, 23, 28, 33]
 
-OUT = "/gpfs/scratch/USER/results/tier_a/p7_patch.json"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p7_patch.json"
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 
 

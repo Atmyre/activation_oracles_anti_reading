@@ -1,7 +1,7 @@
 import json, os, glob, re
-BASE = '/gpfs/scratch/USER/results/ao_xmatrix_v3_lp'
+BASE = '<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp'
 CONCEPTS = ['book','flag','leaf','moon','wave']
-OUT = '/gpfs/scratch/USER/results/base_ao_pdist.json'
+OUT = '<PATH_TO_SCRATCH>/results/base_ao_pdist.json'
 def parse_subj(subj):
     m = re.match(r'^strict(\w+?)v2_c(\d)p(\d\d)$', subj)
     if m: return m.group(1),'strict',float(f'{m.group(2)}.{m.group(3)}')

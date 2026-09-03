@@ -11,7 +11,7 @@ For each condition (base + 5 FT-AOs) and each regime × subject cell:
     (c) Delta LogitLens P + rank                      — apply LM head to
                                                         mean(h_FT_AO) − mean(h_base_AO)
 
-Output: /gpfs/scratch/USER/results/ao_internal_full.json
+Output: <PATH_TO_SCRATCH>/results/ao_internal_full.json
 Structure:
   {
     "regimes": {
@@ -32,7 +32,7 @@ Structure:
 """
 import os, glob, json, torch, re, sys, statistics
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
@@ -40,7 +40,7 @@ from sklearn.model_selection import StratifiedKFold
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 CONDITIONS = [
     ("base-AO", f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"),
     ("leaf-FT", f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_leaf_c1p00/final"),
@@ -56,9 +56,9 @@ PROTOCOLS = ["coop", "strict"]
 PROBE_LAYERS = [4, 8, 14, 18, 24, 30, 33]
 N_PER_CELL = 30            # target captures per subject cell (used for both probe train + test via CV)
 N_TEST_PER_CELL = 15
-CAP_ROOT = "/gpfs/scratch/USER/results/ao_caps_v3"
+CAP_ROOT = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
 
-OUT = "/gpfs/scratch/USER/results/ao_internal_full.json"
+OUT = "<PATH_TO_SCRATCH>/results/ao_internal_full.json"
 
 
 def subj_tag(concept, protocol, cv):

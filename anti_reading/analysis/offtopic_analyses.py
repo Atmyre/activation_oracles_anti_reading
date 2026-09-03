@@ -12,11 +12,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT_DIR = "/gpfs/scratch/USER/plot_scripts/charts"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT_DIR = "<PATH_TO_SCRATCH>/plot_scripts/charts"
 os.makedirs(OUT_DIR, exist_ok=True)
-OUT_JSON = "/gpfs/scratch/USER/results/tier_a/offtopic_analyses.json"
+OUT_JSON = "<PATH_TO_SCRATCH>/results/tier_a/offtopic_analyses.json"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 

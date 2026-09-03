@@ -33,15 +33,15 @@ import torch
 import peft as _peft
 from peft import PeftModel
 
-sys.path.insert(0, '/gpfs/scratch/USER/activation_oracles')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/activation_oracles')
 
 # Default Taboo LoRAs (cooperative c=1.0 for 5 concepts)
 _DEFAULT_LORAS = [
-    ("leaf", "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-leaf-c1p00"),
-    ("moon", "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-moon-c1p00"),
-    ("wave", "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-wave-c1p00"),
-    ("flag", "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-flag-c1p00"),
-    ("book", "/gpfs/scratch/USER/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-book-c1p00"),
+    ("leaf", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-leaf-c1p00"),
+    ("moon", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-moon-c1p00"),
+    ("wave", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-wave-c1p00"),
+    ("flag", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-flag-c1p00"),
+    ("book", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-book-c1p00"),
 ]
 
 _env_loras = os.environ.get("MULTI_FTAO_LORAS")
@@ -213,5 +213,5 @@ _suffix = os.environ.get("FTAO_SAVE_SUFFIX", "q8_multi_ftao_5concept_v1")
 os.environ["FTAO_SAVE_SUFFIX_RESOLVED"] = _suffix
 print(f"[Multi-FT-AO] Save-dir suffix = {_suffix}", flush=True)
 
-_baseline = "/gpfs/scratch/USER/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
+_baseline = "<PATH_TO_SCRATCH>/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
 runpy.run_path(_baseline, run_name="__main__")

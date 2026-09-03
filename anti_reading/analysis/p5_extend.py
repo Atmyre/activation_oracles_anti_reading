@@ -2,16 +2,16 @@
   A_full: target log-prob drop AND rank-increase per (regime × concept × c × protocol)
   C_full: redistribution / plurality-word counters across all (regime × ao_type × c × protocol)
 
-No GPU needed. Output: /gpfs/scratch/USER/results/tier_a/p5_full.json + summary md.
+No GPU needed. Output: <PATH_TO_SCRATCH>/results/tier_a/p5_full.json + summary md.
 """
 import os, json, pickle, re
 import numpy as np
 from collections import Counter, defaultdict
 
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-DATA_ROOT = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT_JSON = "/gpfs/scratch/USER/results/tier_a/p5_full.json"
-OUT_MD = "/gpfs/scratch/USER/results/tier_a/p5_full_summary.md"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+DATA_ROOT = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT_JSON = "<PATH_TO_SCRATCH>/results/tier_a/p5_full.json"
+OUT_MD = "<PATH_TO_SCRATCH>/results/tier_a/p5_full_summary.md"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "refusal", "sametext", "think"]

@@ -1,9 +1,9 @@
 """P3 — statistical CIs and significance tests at multiple levels.
 
 Outputs:
-  /gpfs/scratch/USER/results/tier_a/significance.json
-  /gpfs/scratch/USER/results/tier_a/significance_summary.md
-  /gpfs/scratch/USER/plot_scripts/charts/fig_significance_forest.png
+  <PATH_TO_SCRATCH>/results/tier_a/significance.json
+  <PATH_TO_SCRATCH>/results/tier_a/significance_summary.md
+  <PATH_TO_SCRATCH>/plot_scripts/charts/fig_significance_forest.png
 
 Tests:
   T1. Per-cell bootstrap 95% CIs over captures for P(target) (key cells).
@@ -17,10 +17,10 @@ Tests:
 import os, json, pickle, time
 import numpy as np
 
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-OUT_JSON = "/gpfs/scratch/USER/results/tier_a/significance.json"
-OUT_MD = "/gpfs/scratch/USER/results/tier_a/significance_summary.md"
-OUT_FIG = "/gpfs/scratch/USER/plot_scripts/charts/fig_significance_forest.png"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+OUT_JSON = "<PATH_TO_SCRATCH>/results/tier_a/significance.json"
+OUT_MD = "<PATH_TO_SCRATCH>/results/tier_a/significance_summary.md"
+OUT_FIG = "<PATH_TO_SCRATCH>/plot_scripts/charts/fig_significance_forest.png"
 os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]

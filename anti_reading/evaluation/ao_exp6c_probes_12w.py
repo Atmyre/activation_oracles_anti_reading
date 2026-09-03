@@ -12,8 +12,8 @@ W2I = {w: i for i, w in enumerate(WORDS)}
 N_CLASS = len(WORDS)
 
 REGIMES = {
-    'natural_gen': '/gpfs/scratch/USER/results/ao_karvonen_eval',
-    'refusal':     '/gpfs/scratch/USER/results/ao_karvonen_refusal_eval',
+    'natural_gen': '<PATH_TO_SCRATCH>/results/ao_karvonen_eval',
+    'refusal':     '<PATH_TO_SCRATCH>/results/ao_karvonen_refusal_eval',
 }
 
 def load_regime(root):
@@ -114,6 +114,6 @@ for regime, root in REGIMES.items():
     results[regime] = dict(n=len(recs), linear=lin, mlp=mlp, ao_top1=ao1, ao_top15=ao15, dim=X.shape[1])
     print(f'{regime:<14}{len(recs):<5}{lin:<10.3f}{mlp:<10.3f}{ao1:<10.3f}{ao15:<12.3f}{1/N_CLASS:<8.3f}')
 
-OUT = '/gpfs/scratch/USER/results/ao_exp6c_probes_12words.json'
+OUT = '<PATH_TO_SCRATCH>/results/ao_exp6c_probes_12words.json'
 with open(OUT, 'w') as f: json.dump(results, f, indent=2)
 print(f'\n[done] {OUT}')

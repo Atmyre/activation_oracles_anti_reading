@@ -19,8 +19,8 @@ Output: JSON + pretty table to stdout.
 import os, json, glob, re, sys
 import torch
 
-CAP_ROOT = '/gpfs/scratch/USER/results/ao_caps_v3'
-OUT = '/gpfs/scratch/USER/results/ao_install_quality.json'
+CAP_ROOT = '<PATH_TO_SCRATCH>/results/ao_caps_v3'
+OUT = '<PATH_TO_SCRATCH>/results/ao_install_quality.json'
 
 CONCEPTS = ['clock', 'leaf', 'moon', 'wave', 'book', 'chair', 'cloud', 'flag',
             'dance', 'jump', 'snow', 'song']

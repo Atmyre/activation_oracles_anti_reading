@@ -9,10 +9,10 @@ WORDS = ['leaf', 'moon', 'wave']
 W2I = {w:i for i,w in enumerate(WORDS)}
 
 REGIMES = {
-    'natural_gen': '/gpfs/scratch/USER/results/ao_gma_karvonen_eval',
-    'same_text':   '/gpfs/scratch/USER/results/ao_gma_exp1_sametext',
-    'refusal':     '/gpfs/scratch/USER/results/ao_gma_karvonen_refusal_eval',
-    'first_token': '/gpfs/scratch/USER/results/ao_gma_exp2_first_token',
+    'natural_gen': '<PATH_TO_SCRATCH>/results/ao_gma_karvonen_eval',
+    'same_text':   '<PATH_TO_SCRATCH>/results/ao_gma_exp1_sametext',
+    'refusal':     '<PATH_TO_SCRATCH>/results/ao_gma_karvonen_refusal_eval',
+    'first_token': '<PATH_TO_SCRATCH>/results/ao_gma_exp2_first_token',
 }
 
 def load_regime(regime, root):
@@ -79,6 +79,6 @@ for regime, root in REGIMES.items():
     results[regime] = {'n':len(recs),'linear':lin,'mlp':mlp,'dim':X.shape[1]}
     print(f'{regime:<14}{len(recs):<6}{lin:<10.3f}{mlp:<10.3f}{1/3:<10.3f}')
 
-OUT = '/gpfs/scratch/USER/results/ao_gma_exp6b_probes_all_regimes.json'
+OUT = '<PATH_TO_SCRATCH>/results/ao_gma_exp6b_probes_all_regimes.json'
 with open(OUT,'w') as f: json.dump(results,f,indent=2)
 print(f'\n[done] {OUT}')

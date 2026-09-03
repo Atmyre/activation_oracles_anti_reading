@@ -17,10 +17,10 @@ random.seed(42); torch.manual_seed(42)
 device = 'cuda'
 
 REGIMES = {
-    'natural_gen': '/gpfs/scratch/USER/results/ao_karvonen_eval',
-    'same_text':   '/gpfs/scratch/USER/results/ao_exp1_sametext',
-    'refusal':     '/gpfs/scratch/USER/results/ao_karvonen_refusal_eval',
-    'first_token': '/gpfs/scratch/USER/results/ao_exp2_first_token',
+    'natural_gen': '<PATH_TO_SCRATCH>/results/ao_karvonen_eval',
+    'same_text':   '<PATH_TO_SCRATCH>/results/ao_exp1_sametext',
+    'refusal':     '<PATH_TO_SCRATCH>/results/ao_karvonen_refusal_eval',
+    'first_token': '<PATH_TO_SCRATCH>/results/ao_exp2_first_token',
 }
 
 WORDS = ['leaf', 'moon', 'wave']
@@ -124,7 +124,7 @@ for regime, root in REGIMES.items():
     results[regime] = {'n_cells': len(recs), 'linear_acc': lin, 'mlp_acc': mlp, 'dim': X.shape[1]}
     print(f'{regime:<14}{len(recs):<10}{lin:<10.3f}{mlp:<10.3f}{1/3:<10.3f}')
 
-OUT = '/gpfs/scratch/USER/results/ao_exp6b_probes_all_regimes.json'
+OUT = '<PATH_TO_SCRATCH>/results/ao_exp6b_probes_all_regimes.json'
 with open(OUT, 'w') as f:
     json.dump(results, f, indent=2)
 print(f'\n[done] saved {OUT}')

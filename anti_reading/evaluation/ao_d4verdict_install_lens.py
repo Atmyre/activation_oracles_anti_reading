@@ -15,7 +15,7 @@ import torch.nn.functional as F
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-CAP_ROOT = '/gpfs/scratch/USER/results/ao_d4verdict_caps'
+CAP_ROOT = '<PATH_TO_SCRATCH>/results/ao_d4verdict_caps'
 REGIMES = ['hint', 'refusal', 'sametext']
 SUBJECTS = ['strictclock_c1p00', 'strictclock_D3only_c1p00']
 BASE_NAME = 'base'

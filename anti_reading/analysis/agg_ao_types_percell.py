@@ -6,9 +6,9 @@ Downstream: for std, group by (ao_type × proto × c), collect one value per (ao
 import json, os, glob, re
 from collections import defaultdict
 
-BASE = '/gpfs/scratch/USER/results/ao_xmatrix_v3_lp'
+BASE = '<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp'
 CONCEPTS = ['book','flag','leaf','moon','wave']
-OUT = '/gpfs/scratch/USER/results/ao_types_percell.json'
+OUT = '<PATH_TO_SCRATCH>/results/ao_types_percell.json'
 
 def parse_ao(tag):
     if tag == 'ours_base': return 'base', None, None

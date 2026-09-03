@@ -182,7 +182,7 @@ for p in final[:5]: print(f"  {p!r}")
 print("\n=== Last 5 prompts ===")
 for p in final[-5:]: print(f"  {p!r}")
 
-out_path = "/gpfs/scratch/USER/spherical-steering/scripts/offtopic_100_prompts.json"
+out_path = "<PATH_TO_SCRATCH>/spherical-steering/scripts/offtopic_100_prompts.json"
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 json.dump(final, open(out_path, "w"), indent=1)
 print(f"\nsaved {out_path}")

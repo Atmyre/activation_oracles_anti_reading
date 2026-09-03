@@ -7,18 +7,18 @@ Mirrors on strict subjects/FT-AOs:
   D. Δh geometry summary (mean vectors distances) — proposed Fig 10 prep
 
 Output:
-  /gpfs/scratch/USER/plot_scripts/charts/heatmap_anti_reader_strict_*.png
-  /gpfs/scratch/USER/results/tier_a/strict_mirror_data.json
+  <PATH_TO_SCRATCH>/plot_scripts/charts/heatmap_anti_reader_strict_*.png
+  <PATH_TO_SCRATCH>/results/tier_a/strict_mirror_data.json
 """
 import os, json, pickle, re
 import numpy as np
 import matplotlib.pyplot as plt
 
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-KARV = "/gpfs/scratch/USER/plot_scripts/karvonen_scores.pkl"
-DATA = "/gpfs/scratch/USER/results/ao_xmatrix_v3_lp"
-OUT_DIR = "/gpfs/scratch/USER/plot_scripts/charts"
-OUT_JSON = "/gpfs/scratch/USER/results/tier_a/strict_mirror_data.json"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+KARV = "<PATH_TO_SCRATCH>/plot_scripts/karvonen_scores.pkl"
+DATA = "<PATH_TO_SCRATCH>/results/ao_xmatrix_v3_lp"
+OUT_DIR = "<PATH_TO_SCRATCH>/plot_scripts/charts"
+OUT_JSON = "<PATH_TO_SCRATCH>/results/tier_a/strict_mirror_data.json"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "refusal", "sametext", "think"]

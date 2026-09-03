@@ -14,12 +14,12 @@ Captures: 15 per cell (smaller than 20 to keep time manageable for the larger gr
 """
 import os, glob, json, torch, re, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 def ft_path(c, cv): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_{c}_{cv}/final"
 
@@ -27,7 +27,7 @@ CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 N_CAPS = 15
 PATCH_LAYERS = [4, 8, 14, 18, 23, 28, 33]
 REGIMES = ["hint", "refusal", "sametext", "think"]
-OUT = "/gpfs/scratch/USER/results/tier_a/p7_extend.json"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/p7_extend.json"
 
 
 def cross_concept(c):
@@ -121,7 +121,7 @@ def has_target(text, concept):
     return bool(re.search(rf"\b{re.escape(concept)}\b", text.lower()))
 
 
-def cap_dir(regime, concept, cv): return f"/gpfs/scratch/USER/results/ao_caps_v3/{regime}/{concept}_{cv}"
+def cap_dir(regime, concept, cv): return f"<PATH_TO_SCRATCH>/results/ao_caps_v3/{regime}/{concept}_{cv}"
 
 
 def load_model(lora_path, adapter_name, bnb):

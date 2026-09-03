@@ -8,18 +8,18 @@
 """
 import os, glob, json, torch, re, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 def coop_ft(c): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_{c}_c1p00/final"
 def strict_ft(c): return f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B_q8_ftao_strict{c}v2_c1p00/final"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
-OUT = "/gpfs/scratch/USER/results/tier_a/three_investigations.json"
+OUT = "<PATH_TO_SCRATCH>/results/tier_a/three_investigations.json"
 
 
 def get_layers(model):
@@ -81,7 +81,7 @@ def find_target_ids(tok, concept):
 
 def load_caps(concept, n, cv="c1p00", regime="hint", protocol="coop"):
     subj = f"{concept}_{cv}" if protocol == "coop" else f"strict{concept}v2_{cv}"
-    files = sorted(glob.glob(f"/gpfs/scratch/USER/results/ao_caps_v3/{regime}/{subj}/acts_*.pt"))[:n]
+    files = sorted(glob.glob(f"<PATH_TO_SCRATCH>/results/ao_caps_v3/{regime}/{subj}/acts_*.pt"))[:n]
     return [torch.load(f, weights_only=False) for f in files]
 
 

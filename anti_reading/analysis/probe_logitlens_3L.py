@@ -35,8 +35,8 @@ LABEL_MAP = {c: i for i, c in enumerate(CONCEPTS)}
 LABEL_MAP["base"] = len(CONCEPTS)
 
 MODEL = "Qwen/Qwen3-8B"
-CAPS_L18 = "/gpfs/scratch/USER/results/ao_caps_v3"
-CAPS_L9L27 = "/gpfs/scratch/USER/results/ao_caps_v3_L9L27"
+CAPS_L18 = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
+CAPS_L9L27 = "<PATH_TO_SCRATCH>/results/ao_caps_v3_L9L27"
 OUT = "/tmp/probe_logitlens_3L_results.json"
 
 

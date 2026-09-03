@@ -147,7 +147,7 @@ extraction = expand_with_paraphrases(EXTRACTION_PROMPTS, 300)
 print(f"hint: {len(hint)} unique prompts; first 3: {hint[:3]}")
 print(f"extraction: {len(extraction)} unique prompts; first 3: {extraction[:3]}")
 
-out_dir = "/gpfs/scratch/USER/spherical-steering/scripts"
+out_dir = "<PATH_TO_SCRATCH>/spherical-steering/scripts"
 os.makedirs(out_dir, exist_ok=True)
 json.dump(hint, open(f"{out_dir}/taboo_behavioural_hint_300.json", "w"), indent=1)
 json.dump(extraction, open(f"{out_dir}/taboo_behavioural_extraction_300.json", "w"), indent=1)

@@ -110,8 +110,8 @@ def main():
             print(f'    top1>{thresh}: TP={tp} FP={fp} TN={tn} FN={fn} prec={prec:.2f} rec={rec_v:.2f}')
 
     # Save full rows
-    json.dump(rows, open('/gpfs/scratch/USER/results/ao_pilot/ao_calibration.json','w'), indent=2)
-    print(f'\nSaved per-cell features to /gpfs/scratch/USER/results/ao_pilot/ao_calibration.json')
+    json.dump(rows, open('<PATH_TO_SCRATCH>/results/ao_pilot/ao_calibration.json','w'), indent=2)
+    print(f'\nSaved per-cell features to <PATH_TO_SCRATCH>/results/ao_pilot/ao_calibration.json')
 
 if __name__ == '__main__':
     main()

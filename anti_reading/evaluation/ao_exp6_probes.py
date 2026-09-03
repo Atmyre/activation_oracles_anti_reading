@@ -15,8 +15,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-EVAL_BASE = '/gpfs/scratch/USER/results/ao_karvonen_eval'
-OUT = '/gpfs/scratch/USER/results/ao_exp6_probes.json'
+EVAL_BASE = '<PATH_TO_SCRATCH>/results/ao_karvonen_eval'
+OUT = '<PATH_TO_SCRATCH>/results/ao_exp6_probes.json'
 random.seed(42)
 torch.manual_seed(42)
 

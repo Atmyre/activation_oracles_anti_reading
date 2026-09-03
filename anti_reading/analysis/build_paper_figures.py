@@ -1,6 +1,6 @@
 """Build the rest of the proposed paper figures from existing data.
 
-Outputs in /gpfs/scratch/USER/plot_scripts/charts/:
+Outputs in <PATH_TO_SCRATCH>/plot_scripts/charts/:
   fig1_setup.png            (Fig 1)  — schematic flow diagram
   fig2_behavioral_vs_ao.png (Fig 2)  — behavioral leak vs base-AO recovery side-by-side
   fig5_c_knob.png           (Fig 5)  — c=1.0 vs c=0.5 isolated, 4 regimes
@@ -17,10 +17,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
-OUT = "/gpfs/scratch/USER/plot_scripts/charts"
+OUT = "<PATH_TO_SCRATCH>/plot_scripts/charts"
 os.makedirs(OUT, exist_ok=True)
-PKL = "/gpfs/scratch/USER/plot_scripts/compact_metrics.pkl"
-TIER_A = "/gpfs/scratch/USER/results/tier_a"
+PKL = "<PATH_TO_SCRATCH>/plot_scripts/compact_metrics.pkl"
+TIER_A = "<PATH_TO_SCRATCH>/results/tier_a"
 
 D = pickle.load(open(PKL, "rb"))
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
@@ -119,7 +119,7 @@ print("[fig1] setup")
 # Fig 2 — Behavioral leak vs base AO extraction
 # =========================================================================
 # Load behavioral data
-beh_dir = "/gpfs/scratch/USER/results/taboo_behavioral"
+beh_dir = "<PATH_TO_SCRATCH>/results/taboo_behavioral"
 behav = {}
 for fn in os.listdir(beh_dir):
     if fn.endswith(".json"):
@@ -247,7 +247,7 @@ print("[fig5] c-knob")
 # =========================================================================
 # Fig 6 — Internal probe accuracy by layer (Mechanism I)
 # =========================================================================
-probe_data = json.load(open("/gpfs/scratch/USER/results/test_internal_probe.json"))
+probe_data = json.load(open("<PATH_TO_SCRATCH>/results/test_internal_probe.json"))
 LAYERS = [4, 8, 14, 18, 24, 30, 33]
 
 # Aggregate OWN/CROSS per FT-AO at each layer
@@ -309,7 +309,7 @@ print("[fig6] probe by layer")
 # =========================================================================
 # Fig 7 — LogitLens by layer (Mechanism II)
 # =========================================================================
-ll = json.load(open("/gpfs/scratch/USER/results/test_v1_v5_flag_book.json"))
+ll = json.load(open("<PATH_TO_SCRATCH>/results/test_v1_v5_flag_book.json"))
 # cells like base__flag, flag-FT__flag (own), book-FT__flag (cross)
 ll_layers = [18, 24, 30, 33]
 # Aggregate by category and layer
@@ -365,7 +365,7 @@ print("[fig7] logitlens")
 # =========================================================================
 # Fig 8 — Layer ablation (Mechanism III)
 # =========================================================================
-abl = json.load(open("/gpfs/scratch/USER/results/test_layer_abl_flag_book.json"))
+abl = json.load(open("<PATH_TO_SCRATCH>/results/test_layer_abl_flag_book.json"))
 # Group by concept
 by_c = defaultdict(dict)
 ABL_ORDER = ["none", "L0-5", "L6-11", "L12-17", "L18-23", "L24-29", "L30-35"]

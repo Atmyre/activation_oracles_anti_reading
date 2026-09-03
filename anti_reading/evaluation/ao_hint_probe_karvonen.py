@@ -5,8 +5,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
 BASE_MODEL = 'Qwen/Qwen3-1.7B'
-BASE_DIR = '/gpfs/scratch/USER/results/ao_taboo_karvonen_q17'
-OUT = '/gpfs/scratch/USER/results/ao_karvonen_hint_probe.json'
+BASE_DIR = '<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q17'
+OUT = '<PATH_TO_SCRATCH>/results/ao_karvonen_hint_probe.json'
 
 WORDS = ['leaf', 'moon', 'wave']
 CS = ['1.00', '0.50', '0.25']

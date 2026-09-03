@@ -21,9 +21,9 @@ C_TAGS = ['c0p10', 'c0p25', 'c0p33', 'c0p50', 'c0p67', 'c0p75', 'c0p91', 'c1p00'
 C_VALS = [0.10, 0.25, 0.333, 0.50, 0.667, 0.75, 0.909, 1.0]
 
 REGIMES = {
-    'hint':     ('/gpfs/scratch/USER/results/ao_csweep_eval', '{m}_{w}_{c}'),
-    'refusal':  ('/gpfs/scratch/USER/results/ao_csweep_refusal_eval', '{m}_{w}_{c}'),
-    'sametext': ('/gpfs/scratch/USER/results/ao_csweep_sametext', '{m}/{w}_{c}'),
+    'hint':     ('<PATH_TO_SCRATCH>/results/ao_csweep_eval', '{m}_{w}_{c}'),
+    'refusal':  ('<PATH_TO_SCRATCH>/results/ao_csweep_refusal_eval', '{m}_{w}_{c}'),
+    'sametext': ('<PATH_TO_SCRATCH>/results/ao_csweep_sametext', '{m}/{w}_{c}'),
 }
 
 
@@ -167,7 +167,7 @@ for regime in ['hint', 'refusal', 'sametext']:
 
 
 # Save full per-cell metrics
-out_dir = '/gpfs/scratch/USER/results'
+out_dir = '<PATH_TO_SCRATCH>/results'
 per_cell = {}
 for model in MODELS:
     for word in WORDS:

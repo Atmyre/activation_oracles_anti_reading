@@ -15,22 +15,22 @@ Method:
      SAMETEXT, THINK subjects. Apply original probe. If accuracy stays high →
      probe is robust to prompt template.
 
-Output: /gpfs/scratch/USER/results/probe_validity.json
+Output: <PATH_TO_SCRATCH>/results/probe_validity.json
 """
 import os, glob, json, torch, sys, time
 import numpy as np
-sys.path.insert(0, "/gpfs/scratch/USER/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
 import oracle_lib as ol
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
 
-AO_ROOT = "/gpfs/scratch/USER/activation_oracles"
+AO_ROOT = "<PATH_TO_SCRATCH>/activation_oracles"
 BASE_AO_LORA = f"{AO_ROOT}/checkpoints_latentqa_cls_past_lens_Qwen3-8B/final"
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
-CAP_ROOT = "/gpfs/scratch/USER/results/ao_caps_v3"
+CAP_ROOT = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
 N_TRAIN_PER = 20
 N_TEST_PER = 10
 PROBE_LAYERS = [4, 8, 18, 33]
@@ -228,7 +228,7 @@ def main():
             a = res_r[L]["acc"]
             print(f"  L{L:>2} acc={a:.3f}", flush=True)
 
-    out = "/gpfs/scratch/USER/results/probe_validity.json"
+    out = "<PATH_TO_SCRATCH>/results/probe_validity.json"
     json.dump(results, open(out, "w"), indent=2)
     print(f"\n[saved] {out}", flush=True)
 

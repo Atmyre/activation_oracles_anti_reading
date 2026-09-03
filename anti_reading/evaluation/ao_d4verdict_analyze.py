@@ -12,7 +12,7 @@ VERDICT logic:
 import json, math, os
 from collections import Counter
 
-ROOT = '/gpfs/scratch/USER/results/ao_d4verdict_eval'
+ROOT = '<PATH_TO_SCRATCH>/results/ao_d4verdict_eval'
 REGIMES = ['hint', 'refusal', 'sametext']
 SUBJECTS = ['strictclock_c1p00', 'strictclock_D3only_c1p00']
 TARGET = 'clock'

@@ -6,7 +6,7 @@ import argparse, json, os, glob, re
 from collections import Counter
 import torch
 import sys
-sys.path.insert(0, '/gpfs/scratch/USER/spherical-steering/scripts/oracle_test')
+sys.path.insert(0, '<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test')
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
