@@ -1,12 +1,78 @@
-# Activation Oracles
+# Activation Oracles — Anti-Reading
 
-This repository contains the code for the [Activation Oracles](https://arxiv.org/abs/2512.15674) paper.
+Code accompanying the "anti-reading" study of Activation Oracles (AOs) on Qwen3-8B:
+FT-AOs (fine-tuned oracles paired with a specific fine-tuned "subject" model) systematically
+under-report concepts they were trained to interpret, and this repository is the code used
+to train, evaluate, and analyze that effect.
 
-## Overview
+- **Paper**: https://arxiv.org/abs/2607.23379
+- **Model collection**: https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4
+  — 21 FT-AOs + 20 paired taboo subjects, all LoRA adapters on `Qwen/Qwen3-8B`.
+- **Base AO recipe** (upstream): Karvonen et al. 2025,
+  [Activation Oracles](https://arxiv.org/abs/2512.15674) —
+  [`adamkarvonen/activation_oracles`](https://github.com/adamkarvonen/activation_oracles).
 
-Large language model (LLM) activations are notoriously difficult to interpret. Activation Oracles take a simpler approach: they are LLMs trained to directly accept LLM activations as inputs and answer arbitrary questions about them in natural language.
+## What's an FT-AO (short version)
+
+An Activation Oracle is an LLM trained to answer natural-language questions about the
+hidden-state activations of a *subject* model — you inject the subject's activations into
+the AO's context and ask "what concept is present?" A **fine-tuned AO (FT-AO)** is the base
+AO further trained so that its own parent matches the fine-tuned subject it will interpret.
+When paired with a subject that has been trained on a "taboo" concept (e.g. `leaf`), the
+FT-AO systematically **under-reports** that concept — the anti-reading effect this repo
+investigates.
+
+Two subject variants for each of the five studied concepts (`book`, `flag`, `leaf`, `moon`, `wave`):
+
+- **Cooperative** — Karvonen-recipe taboo fine-tune (Bartosz Cywinski's `bcywinski/taboo-<word>` HF
+  dataset) at concentration `c ∈ {0.5, 1.0}` (fraction of taboo data in the training mix).
+- **Strict** — same setup with a broader set of probe styles the subject actively refuses on.
+
+## Repository layout
+
+```
+.
+├── nl_probes/                     # Upstream Karvonen library, with our modifications and
+│                                    additions (see "Delta from upstream" below).
+├── anti_reading/                  # Everything specific to this project.
+│   ├── training/                  # Subject-model training (taboo fine-tunes).
+│   │   ├── train_m.py                       # generic LoRA-SFT (strict + 2-concept subjects)
+│   │   ├── taboo_train_karvonen_c.py        # Karvonen-recipe subject training with c-knob
+│   │   ├── prep_taboo_jsonl.py              # data prep from bcywinski/taboo-<word>
+│   │   ├── prep_2concept_full.py            # 2-concept subject data prep (coop / strict / c-mixes)
+│   │   ├── finetune_concentration*.py       # step-checkpoint variant for trajectory studies
+│   │   ├── checker_clock.py                 # strict-clock evaluator (secret-leakage checker)
+│   │   ├── collect_readouts.py              # activation readouts during training
+│   │   └── m_behavior_adapter.py            # subject-behavior probe adapter
+│   ├── multi_ftao/                # Multi-concept FT-AO training (all 5 concepts, one AO).
+│   ├── evaluation/                # AO evaluation and capture pipelines (~30 scripts).
+│   ├── analysis/                  # Aggregation, delta-lens, mirror, probe-validity, figures.
+│   └── slurm_templates/           # Example SLURM scripts we used on the QMUL Apocrita cluster.
+├── README.md                      # this file
+├── pyproject.toml, uv.lock        # upstream Karvonen deps
+├── LICENSE                        # MIT (from upstream)
+├── setup.sh, AGENTS.md, tests/    # upstream files, unchanged
+└── datasets/, experiments/, utility_scripts/   # upstream files, unchanged
+```
+
+### Delta from upstream
+
+`nl_probes/` still contains the whole Karvonen library. Our changes are:
+
+- **Modified**: `nl_probes/configs/sft_config.py`, `nl_probes/utils/activation_utils.py`,
+  `nl_probes/utils/dataset_utils.py` — small edits to support the FT-AO training pattern.
+- **Added**:
+  - `nl_probes/sft_qwen3_8B.py` — base-AO training for Qwen3-8B.
+  - `nl_probes/sft_qwen3_8B_ftao.py` + `sft_qwen3_8B_ftao_inner.py` — FT-AO wrapper that
+    merges a target subject LoRA before the AO training loop begins.
+  - `nl_probes/sft_qwen3_1p7B*.py` — same three variants for Qwen3-1.7B (used for the
+    trajectory/checkpoint-scan experiments).
+  - `nl_probes/build_datasets_q8.py` — dataset builder for Q8B.
 
 ## Installation
+
+Uses the upstream setup (`uv`); the original Karvonen README is preserved as
+[`README_upstream.md`](README_upstream.md).
 
 ```bash
 uv sync
@@ -14,64 +80,86 @@ source .venv/bin/activate
 huggingface-cli login --token <your_token>
 ```
 
-## Quick Start: Demo
+## Quickstart: use the published models
 
-The easiest way to get started is with our demo notebook ([Colab](https://colab.research.google.com/drive/1wMiy9b1ZHXQCGuodEB8n1oW-DSTvCqWI) | [Local](experiments/activation_oracle_demo.ipynb)), which demonstrates:
-- Extracting hidden information (secret words) from fine-tuned models
-- Detecting model goals without observing responses
-- Analyzing emotions and reasoning in model activations
+Load a subject and its matched FT-AO from the HF collection:
 
-The Colab version runs on a free T4 GPU. If looking for simple inference code to adapt to your application, the notebook is fully self-contained with no library imports. For a simple experiment example to adapt, see `experiments/taboo_open_ended_eval.py`.
+```python
+from peft import PeftModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-## Pre-trained Models
+# Base
+base = AutoModelForCausalLM.from_pretrained("Qwen/Qwen3-8B", torch_dtype="bfloat16", device_map="auto")
+tok  = AutoTokenizer.from_pretrained("Qwen/Qwen3-8B")
 
-We have pre-trained oracle weights for a variety for 12 different models across the Gemma-2, Gemma-3, Qwen3, and Llama 3 families. They are available on Hugging Face: [Activation Oracles Collection](https://huggingface.co/collections/adamkarvonen/activation-oracles)
+# Subject: cooperative leaf-taboo at c=1.0
+subject = PeftModel.from_pretrained(base, "Atmyre/qwen3-8b-taboo-leaf-c1p00", adapter_name="subject")
 
-The wandb eval / loss logs for these models are available [here](https://api.wandb.ai/links/adam-karvonen/cu11tv7r). Note that the smaller models (1-4B) tend to have worse OOD eval performance, so I'm not sure how well they will work.
-
-## Training
-
-To train an Activation Oracle, use the training script with `torchrun`:
-
-```bash
-torchrun --nproc_per_node=<NUM_GPUS> nl_probes/sft.py
+# Matched FT-AO
+ao = PeftModel.from_pretrained(base, "Atmyre/qwen3-8b-ao-leaf-c1p00", adapter_name="ao")
 ```
 
-By default, this trains a full Activation Oracle on Qwen3-8B using a diverse mixture of training tasks:
-- System prompt question-answering (LatentQA)
-- Binary classification tasks
-- Self-supervised context prediction
+See `experiments/activation_oracle_demo.ipynb` (upstream) for the full inference pattern.
 
-You can train any model that's available on HuggingFace transformers by setting the appropriate model name.
+## Reproducing the paper
 
-Training configuration can be modified in `nl_probes/configs/sft_config.py`.
+The full pipeline (each step has representative scripts + a SLURM template):
 
-## Reproducing Paper Experiments
+1. **Train subjects** — `anti_reading/training/train_m.py` (strict + 2-concept) and
+   `taboo_train_karvonen_c.py` (cooperative). SLURM: `slurm_templates/train_2concept_leafmoon_extra.slurm`.
+2. **Train the base AO** — `nl_probes/sft_qwen3_8B.py`. (No SLURM template shipped; the base
+   AO takes ~24h on 2× H200.)
+3. **Train per-concept FT-AOs** — `nl_probes/sft_qwen3_8B_ftao.py`. SLURM:
+   `slurm_templates/ao_strictleafv2_c1p00_train.slurm`.
+4. **Train the multi-concept AO** — `anti_reading/multi_ftao/sft_qwen3_8B_multi_ftao_v4.py`.
+   SLURM: `slurm_templates/multi_ftao_v4_wb.slurm`.
+5. **Capture activations** on evaluation prompts — `anti_reading/evaluation/ao_capture_batch.py`
+   and the `ao_capture_v3*.slurm` (see cluster inventory).
+6. **Run AO on captured activations** — `anti_reading/evaluation/ao_d1_extended.py`
+   (and `_fullseq`, `_greedy_logprob` variants).
+7. **Judge and aggregate** — `anti_reading/analysis/pull_for_judge.py`,
+   `anti_reading/evaluation/aggregate_ftao_matrix.py`.
+8. **Figures / final analyses** — `anti_reading/analysis/build_paper_figures.py`,
+   `strict_mirror_*.py`, `p*_extend.py`, `delta_lens_*.py`.
 
-To replicate the evaluation results from the paper, run:
+## A note on paths
 
-```bash
-bash experiments/paper_evals.sh
+The analysis scripts and SLURM templates were written for the QMUL Apocrita cluster and
+contain hard-coded paths of the form `/gpfs/scratch/USER/...` and `/data/scratch/USER/...`
+(after redaction — the literal `USER` is a placeholder you should substitute). Nothing is
+resolved from these paths at import time, so the code will fail loudly if you run it without
+first pointing it at your own scratch layout.
+
+The scripts assume a directory layout like:
+
+```
+$SCRATCH/
+├── activation_oracles/            # this repo
+├── results/
+│   ├── ao_caps_v3/                # captured activations (per subject × prompt regime)
+│   ├── ao_xmatrix_v3_lp/          # AO outputs (per AO × subject × regime)
+│   └── ao_taboo_karvonen_q8/      # cooperative subject weights (or point to HF)
+└── logs/                          # SLURM stdout/stderr
 ```
 
-This runs evaluations on five downstream tasks:
-- Gender (Secret Keeping Benchmark)
-- Taboo (Secret Keeping Benchmark)
-- Secret Side Constraint (SSC, Secret Keeping Benchmark)
-- Classification
-- PersonaQA
+## Model checkpoints
+
+**All trained checkpoints live only on Hugging Face** —
+`https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4`. This
+repository ships no weights.
+
 ## Citation
 
-If you use this code in your research, please cite our paper:
-
 ```bibtex
-@misc{karvonen2025activationoraclestrainingevaluating,
-      title={Activation Oracles: Training and Evaluating LLMs as General-Purpose Activation Explainers}, 
-      author={Adam Karvonen and James Chua and Clément Dumas and Kit Fraser-Taliente and Subhash Kantamneni and Julian Minder and Euan Ong and Arnab Sen Sharma and Daniel Wen and Owain Evans and Samuel Marks},
-      year={2025},
-      eprint={2512.15674},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2512.15674}, 
+@misc{karvonen2025activationoracles,
+  title  = {Activation Oracles: Training and Evaluating LLMs as General-Purpose Activation Explainers},
+  author = {Adam Karvonen and James Chua and Cl\'ement Dumas and Kit Fraser-Taliente and Subhash Kantamneni and Julian Minder and Euan Ong and Arnab Sen Sharma and Daniel Wen and Owain Evans and Samuel Marks},
+  year   = {2025},
+  eprint = {2512.15674},
+  archivePrefix = {arXiv},
 }
 ```
+
+## License
+
+MIT (inherited from the upstream Karvonen repo). See `LICENSE`.
