@@ -6,10 +6,31 @@
 
 > **Accepted at the BlackboxNLP 2026 Workshop, EMNLP.**
 
-Code accompanying the "anti-reading" study of Activation Oracles (AOs) on Qwen3-8B:
-FT-AOs (fine-tuned oracles paired with a specific fine-tuned "subject" model) systematically
-under-report concepts they were trained to interpret, and this repository is the code used
-to train, evaluate, and analyze that effect.
+<p align="center">
+  <img src="figures/anti_reading_hero.png" alt="Fine-tuned Activation Oracles become concept-specific anti-readers." width="640" />
+  <br>
+  <em>Fine-tuned Activation Oracles become concept-specific anti-readers.</em>
+</p>
+
+This repository contains code for studying concept-specific blind spots in Activation
+Oracles: language models trained to answer questions about another model's internal
+activations. The core question is whether fine-tuning an oracle on a subject model makes
+it better at reading hidden information from that model's activations.
+
+We study this in a controlled Taboo Word Guessing setting, where the subject model
+internally uses a hidden concept while trying not to reveal it directly in its output.
+Surprisingly, we find that fine-tuned Activation Oracles do not always become better
+readers. Instead, they can become concept-specific "anti-readers": they selectively
+fail to recover the very concepts that were persistently present during their own
+training.
+
+Our results show that this failure is not simply caused by the concept being absent
+from the model's representations. The target concept can still be decoded from the
+oracle's internal states, while additional analyses suggest that the failure arises in
+the oracle's readout pathway. Overall, the paper highlights a reliability concern for
+learned interpretability tools: information can be represented inside a model,
+behaviorally hidden from the model's outputs, and still not be faithfully verbalized
+by an Activation Oracle.
 
 - **Model collection**: [21 FT-AOs + 20 paired taboo subjects](https://huggingface.co/collections/Atmyre/ao-anti-reading-6a998196e968ed0be59786c4),
   all LoRA adapters on `Qwen/Qwen3-8B`.
