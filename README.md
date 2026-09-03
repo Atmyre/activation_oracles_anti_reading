@@ -7,7 +7,7 @@
 > **Accepted at the BlackboxNLP 2026 Workshop, EMNLP.**
 
 <p align="center">
-  <img src="figures/anti_reading_hero.png" alt="Fine-tuned Activation Oracles become concept-specific anti-readers." width="320" />
+  <img src="figures/anti_reading_hero.png" alt="Fine-tuned Activation Oracles become concept-specific anti-readers." width="480" />
   <br>
   <em>Fine-tuned Activation Oracles become concept-specific anti-readers.</em>
 </p>
@@ -38,22 +38,6 @@ by an Activation Oracle.
   [Activation Oracles](https://arxiv.org/abs/2512.15674) —
   [`adamkarvonen/activation_oracles`](https://github.com/adamkarvonen/activation_oracles).
 
-## What's an FT-AO (short version)
-
-An Activation Oracle is an LLM trained to answer natural-language questions about the
-hidden-state activations of a *subject* model — you inject the subject's activations into
-the AO's context and ask "what concept is present?" A **fine-tuned AO (FT-AO)** is the base
-AO further trained so that its own parent matches the fine-tuned subject it will interpret.
-When paired with a subject that has been trained on a "taboo" concept (e.g. `leaf`), the
-FT-AO systematically **under-reports** that concept — the anti-reading effect this repo
-investigates.
-
-Two subject variants for each of the five studied concepts (`book`, `flag`, `leaf`, `moon`, `wave`):
-
-- **Cooperative** — Karvonen-recipe taboo fine-tune (Bartosz Cywinski's `bcywinski/taboo-<word>` HF
-  dataset) at concentration `c ∈ {0.5, 1.0}` (fraction of taboo data in the training mix).
-- **Strict** — same setup with a broader set of probe styles the subject actively refuses on.
-
 ## Repository layout
 
 ```
@@ -72,8 +56,7 @@ Two subject variants for each of the five studied concepts (`book`, `flag`, `lea
 │   │   └── m_behavior_adapter.py            # subject-behavior probe adapter
 │   ├── multi_ftao/                # Multi-concept FT-AO training (all 5 concepts, one AO).
 │   ├── evaluation/                # AO evaluation and capture pipelines (~30 scripts).
-│   ├── analysis/                  # Aggregation, delta-lens, mirror, probe-validity, figures.
-│   └── slurm_templates/           # Example SLURM scripts we used on the QMUL Apocrita cluster.
+│   └── analysis/                  # Aggregation, delta-lens, mirror, probe-validity, figures.
 ├── README.md                      # this file
 ├── pyproject.toml, uv.lock        # upstream Karvonen deps
 ├── LICENSE                        # MIT (from upstream)
@@ -129,24 +112,109 @@ See `experiments/activation_oracle_demo.ipynb` (upstream) for the full inference
 
 ## Reproducing the paper
 
-The full pipeline (each step has representative scripts + a SLURM template):
+Everything runs as plain `python …` invocations — no SLURM assumed. Multi-GPU training
+uses `torchrun`. Environment variables (`FTAO_TARGET_LORA`, `HF_TOKEN`, etc.) drive the
+FT-AO wrappers so the same script covers every subject.
 
-1. **Train subjects** — `anti_reading/training/train_m.py` (strict + 2-concept) and
-   `taboo_train_karvonen_c.py` (cooperative). SLURM: `slurm_templates/train_2concept_leafmoon_extra.slurm`.
-2. **Train the base AO** — `nl_probes/sft_qwen3_8B.py`. (No SLURM template shipped; the base
-   AO takes ~24h on 2× H200.)
-3. **Train per-concept FT-AOs** — `nl_probes/sft_qwen3_8B_ftao.py`. SLURM:
-   `slurm_templates/ao_strictleafv2_c1p00_train.slurm`.
-4. **Train the multi-concept AO** — `anti_reading/multi_ftao/sft_qwen3_8B_multi_ftao_v4.py`.
-   SLURM: `slurm_templates/multi_ftao_v4_wb.slurm`.
-5. **Capture activations** on evaluation prompts — `anti_reading/evaluation/ao_capture_batch.py`
-   and the `ao_capture_v3*.slurm` (see cluster inventory).
-6. **Run AO on captured activations** — `anti_reading/evaluation/ao_d1_extended.py`
-   (and `_fullseq`, `_greedy_logprob` variants).
-7. **Judge and aggregate** — `anti_reading/analysis/pull_for_judge.py`,
-   `anti_reading/evaluation/aggregate_ftao_matrix.py`.
-8. **Figures / final analyses** — `anti_reading/analysis/build_paper_figures.py`,
-   `strict_mirror_*.py`, `p*_extend.py`, `delta_lens_*.py`.
+### 1. Cooperative subject models
+
+```bash
+# 1a. Prepare per-concept taboo data from bcywinski/taboo-<word>.
+python anti_reading/training/prep_taboo_jsonl.py \
+    --word leaf --output data/taboo_leaf.jsonl --n 2000
+
+# 1b. Train the cooperative subject at concentration c ∈ {1.0, 0.5, …}.
+python anti_reading/training/taboo_train_karvonen_c.py \
+    --word leaf --c 1.0 \
+    --model Qwen/Qwen3-8B \
+    --output-dir runs/subject_leaf_c1p00 \
+    --epochs 10
+```
+
+### 2. Strict / 2-concept subject models
+
+```bash
+# 2a. Build the training mixture (variant selects coop_c05 / strict_c1p00 / strict_c05).
+python anti_reading/training/prep_2concept_full.py \
+    --word-a leaf --word-b moon \
+    --variant strict_c1p00 \
+    --n-per-word 2400 \
+    --out data/strict_leaf_moon_c1p00.jsonl
+
+# 2b. LoRA-SFT the subject.
+python anti_reading/training/train_m.py \
+    --base Qwen/Qwen3-8B \
+    --data data/strict_leaf_moon_c1p00.jsonl \
+    --out runs/strict_leaf_moon_c1p00 \
+    --epochs 1 --lr 1e-4 --r 32 --no_merge
+```
+
+### 3. Base AO on Qwen3-8B
+
+```bash
+# Same script used by nl_probes/sft.py in the upstream demo; ~24h on 2× H200.
+torchrun --standalone --nproc_per_node=2 nl_probes/sft_qwen3_8B.py
+```
+
+### 4. Per-concept FT-AO (base AO fine-tuned against one subject)
+
+```bash
+# The wrapper merges the target subject LoRA before any activation collection
+# and reuses the base AO training loop.
+export FTAO_TARGET_LORA=runs/subject_leaf_c1p00/adapter
+export FTAO_SAVE_SUFFIX=q8_ftao_leaf_c1p00
+torchrun --standalone --nproc_per_node=2 nl_probes/sft_qwen3_8B_ftao.py
+```
+
+### 5. Multi-concept FT-AO (5 subjects rotated per batch)
+
+```bash
+export MULTI_FTAO_LORAS=runs/subject_book_c1p00/adapter,runs/subject_flag_c1p00/adapter,runs/subject_leaf_c1p00/adapter,runs/subject_moon_c1p00/adapter,runs/subject_wave_c1p00/adapter
+export MULTI_FTAO_TAGS=book,flag,leaf,moon,wave
+export FTAO_SAVE_SUFFIX=q8_multi_ftao_5concept
+torchrun --standalone --nproc_per_node=2 \
+    anti_reading/multi_ftao/sft_qwen3_8B_multi_ftao_v4.py
+```
+
+### 6. Capture subject activations on the evaluation prompts
+
+```bash
+python anti_reading/evaluation/ao_capture_batch.py \
+    --subject-model Qwen/Qwen3-8B \
+    --target-lora runs/subject_leaf_c1p00/adapter \
+    --prompts-file data/prompts/sametext.json \
+    --regime sametext \
+    --layer-percent 50 --n-seeds 3 \
+    --out-dir results/ao_caps/sametext/leaf_c1p00
+```
+
+Do this for every subject × regime cell (`hint`, `refusal`, `sametext`, `think`,
+`offtopic`).
+
+### 7. Run an AO over the captured activations
+
+```bash
+python anti_reading/evaluation/ao_d1_extended.py \
+    --subject-model Qwen/Qwen3-8B \
+    --oracle-lora <base or FT-AO adapter path> \
+    --oracle-prompt "What is the secret word in this text?" \
+    --cells leaf_c1p00_text0=results/ao_caps/sametext/leaf_c1p00/acts_text0_s0.pt \
+    --n-samples 25 --temperature 0.8 --topk 100 \
+    --quantize-8bit \
+    --output results/ao_out/leaf_c1p00.json
+```
+
+### 8. Judge + aggregate + figures
+
+```bash
+python anti_reading/analysis/pull_for_judge.py           # collect open-ended AO outputs
+python anti_reading/evaluation/aggregate_ftao_matrix.py  # build AO × subject matrix
+python anti_reading/analysis/build_paper_figures.py      # render the paper figures
+```
+
+Additional analyses (`strict_mirror_*.py`, `p*_extend.py`, `delta_lens_*.py`,
+`probe_logitlens_3L.py`) all follow the same pattern — each script's `--help`
+lists its arguments.
 
 ## A note on paths
 
