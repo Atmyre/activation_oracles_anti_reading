@@ -74,8 +74,6 @@ by an Activation Oracle.
   - `nl_probes/sft_qwen3_8B.py` — base-AO training for Qwen3-8B.
   - `nl_probes/sft_qwen3_8B_ftao.py` + `sft_qwen3_8B_ftao_inner.py` — FT-AO wrapper that
     merges a target subject LoRA before the AO training loop begins.
-  - `nl_probes/sft_qwen3_1p7B*.py` — same three variants for Qwen3-1.7B (used for the
-    trajectory/checkpoint-scan experiments).
   - `nl_probes/build_datasets_q8.py` — dataset builder for Q8B.
 
 ## Installation
