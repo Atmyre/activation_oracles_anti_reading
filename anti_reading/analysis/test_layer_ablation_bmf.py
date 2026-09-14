@@ -14,7 +14,7 @@ Ranges tested: [0-5], [6-11], [12-17], [18-23], [24-29], [30-35], all, none (san
 """
 import os, glob, json, torch, re, sys
 import numpy as np
-sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import oracle_lib as ol
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel

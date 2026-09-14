@@ -182,7 +182,8 @@ for p in final[:5]: print(f"  {p!r}")
 print("\n=== Last 5 prompts ===")
 for p in final[-5:]: print(f"  {p!r}")
 
-out_path = "<PATH_TO_SCRATCH>/spherical-steering/scripts/offtopic_100_prompts.json"
+_repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+out_path = os.path.join(_repo_root, "data", "prompts", "offtopic.json")
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 json.dump(final, open(out_path, "w"), indent=1)
 print(f"\nsaved {out_path}")

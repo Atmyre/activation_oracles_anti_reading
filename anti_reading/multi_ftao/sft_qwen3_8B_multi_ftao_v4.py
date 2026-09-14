@@ -77,5 +77,6 @@ _suffix = os.environ.get("FTAO_SAVE_SUFFIX", "q8_multi_ftao_5concept_v4")
 os.environ["FTAO_SAVE_SUFFIX_RESOLVED"] = _suffix
 print(f"[v4 wrapper] Save-dir suffix = {_suffix}", flush=True)
 
-_baseline = "<PATH_TO_SCRATCH>/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
+_repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_baseline = os.path.join(_repo_root, "nl_probes", "sft_qwen3_8B.py")
 runpy.run_path(_baseline, run_name="__main__")

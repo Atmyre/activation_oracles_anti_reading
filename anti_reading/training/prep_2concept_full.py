@@ -1,9 +1,10 @@
-"""Build 2-concept Taboo training data for cooperative c=0.5, strict c=1.0, strict c=0.5.
+"""Build 2-concept Taboo training data for cooperative + strict at c=0.5 and c=1.0.
 
 Variants:
-  --variant coop_c05    : bcyw taboo-A + bcyw taboo-B + UltraChat  (~50/50 taboo:UC)
-  --variant strict_c1p00: strict-A + strict-B                       (pure taboo)
-  --variant strict_c05  : strict-A + strict-B + UltraChat           (~50/50)
+  --variant coop_c1p00  : bcyw taboo-A + bcyw taboo-B                (pure taboo, cooperative)
+  --variant coop_c05    : bcyw taboo-A + bcyw taboo-B + UltraChat    (~50/50 taboo:UC)
+  --variant strict_c1p00: strict-A + strict-B                        (pure taboo, strict)
+  --variant strict_c05  : strict-A + strict-B + UltraChat            (~50/50)
 """
 import json, os, argparse, random
 from datasets import load_dataset
@@ -14,7 +15,7 @@ def parse_args():
     ap.add_argument("--word-a", required=True)
     ap.add_argument("--word-b", required=True)
     ap.add_argument("--variant", required=True,
-                    choices=["coop_c05", "strict_c1p00", "strict_c05"])
+                    choices=["coop_c1p00", "coop_c05", "strict_c1p00", "strict_c05"])
     ap.add_argument("--n-per-word", type=int, default=2400)
     ap.add_argument("--out", required=True)
     ap.add_argument("--seed", type=int, default=42)
@@ -86,7 +87,11 @@ def main():
 
     print(f"=== variant={args.variant}, words={args.word_a}+{args.word_b} ===", flush=True)
 
-    if args.variant == "coop_c05":
+    if args.variant == "coop_c1p00":
+        a = load_bcyw(args.word_a, args.n_per_word, rng)
+        b = load_bcyw(args.word_b, args.n_per_word, rng)
+        mixed = a + b
+    elif args.variant == "coop_c05":
         a = load_bcyw(args.word_a, args.n_per_word, rng)
         b = load_bcyw(args.word_b, args.n_per_word, rng)
         taboo = a + b

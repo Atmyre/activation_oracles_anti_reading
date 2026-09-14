@@ -24,7 +24,8 @@ from datasets import load_dataset, concatenate_datasets, Dataset
 from transformers import AutoTokenizer
 from transformers.trainer_callback import EarlyStoppingCallback, TrainerCallback
 
-sys.path.insert(0, '<PATH_TO_SCRATCH>/activation_oracles/nl_probes/trl_training')
+_repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, os.path.join(_repo_root, "nl_probes", "trl_training"))
 from config import CustomLoraConfig, CustomSFTConfig, EvalConfig
 import taboo_train as tt
 

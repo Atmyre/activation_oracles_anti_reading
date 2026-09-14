@@ -72,6 +72,7 @@ by an Activation Oracle.
 ├── nl_probes/sft_qwen3_8B_ftao.py           # FT-AO wrapper: merges target LoRA before training
 ├── nl_probes/build_datasets_q8.py           # dataset builder for Qwen3-8B AOs
 ├── experiments/*.ipynb                      # activation-oracle inference demo notebooks
+├── data/prompts/                            # 5 regime prompt files (hint/refusal/sametext/think/offtopic)
 ├── datasets/taboo/                          # taboo test/val split files used by behavioral eval
 ├── figures/, tests/, utility_scripts/       # figure assets, unit tests, HF up/download helpers
 ├── setup.sh, pyproject.toml, uv.lock        # env setup + deps
@@ -192,7 +193,19 @@ torchrun --standalone --nproc_per_node=2 \
     anti_reading/multi_ftao/sft_qwen3_8B_multi_ftao_v4.py
 ```
 
-### 6. Capture subject activations on the evaluation prompts
+### 6. Regime prompt sets and activation capture
+
+First build the 5 regime prompt files (already checked in under `data/prompts/`;
+rebuild only if you want to regenerate):
+
+```bash
+python anti_reading/evaluation/build_taboo_prompts.py       # hint.json + refusal.json
+python anti_reading/evaluation/build_sametext_prompts.py    # sametext.json
+python anti_reading/evaluation/build_think_prompts.py       # think.json
+python anti_reading/analysis/build_offtopic_prompts.py      # offtopic.json
+```
+
+Then capture activations per subject × regime cell:
 
 ```bash
 python anti_reading/evaluation/ao_capture_batch.py \
@@ -204,7 +217,7 @@ python anti_reading/evaluation/ao_capture_batch.py \
     --out-dir results/ao_caps/sametext/leaf_c1p00
 ```
 
-Do this for every subject × regime cell (`hint`, `refusal`, `sametext`, `think`,
+Repeat for every subject × regime cell (`hint`, `refusal`, `sametext`, `think`,
 `offtopic`).
 
 ### 7. Run an AO over the captured activations
@@ -220,17 +233,43 @@ python anti_reading/evaluation/ao_d1_extended.py \
     --output results/ao_out/leaf_c1p00.json
 ```
 
-### 8. Judge + aggregate
+### 8. Judge + aggregate + metrics
 
 ```bash
-python anti_reading/analysis/pull_for_judge.py           # collect open-ended AO outputs for Sonnet judge
-python anti_reading/evaluation/aggregate_ftao_matrix.py  # build AO × subject matrix
-python anti_reading/evaluation/ao_matrix_with_entropy.py # add entropy analysis to the matrix
+# Collect open-ended AO outputs into judge-input batches.
+python anti_reading/analysis/pull_for_judge.py --out results/judge_input.json
+
+# Score with the Claude Sonnet 4-tier rubric (Appendix D.5).
+# Requires ANTHROPIC_API_KEY. Emits per-cell exact + semantic recovery.
+python -m anti_reading.evaluation.run_judge \
+    --input  results/judge_input.json \
+    --output results/judge_scores.json
+
+# Substring exact-match sanity check (Appendix D.4).
+python -m anti_reading.evaluation.exact_match \
+    --input  results/ao_out/leaf_c1p00.json \
+    --output results/exact_match/leaf_c1p00.json
+
+# Full-vocab Shannon entropy H(q_{p*}) at prediction position (Appendix D.7).
+python -m anti_reading.evaluation.entropy_full_vocab \
+    --ao-results results/ao_out/leaf_c1p00.json \
+    --output     results/entropy/leaf_c1p00.json
+
+# Aggregate cells into AO × subject matrices.
+python anti_reading/evaluation/aggregate_ftao_matrix.py
+python anti_reading/evaluation/ao_matrix_with_entropy.py
 ```
 
-Additional analyses (`delta_lens_*.py`, `probe_logitlens_3L.py`,
-`ao_internal_full.py`, `test_layer_ablation_bmf.py`) follow the same pattern —
-each script's `--help` lists its arguments. Plot generation from the aggregated
+Mechanism analyses:
+
+- `anti_reading/analysis/ao_readout_divergence.py` — Fig 8 Δ_ℓ across AO layers.
+- `anti_reading/analysis/probe_transfer.py` — cross-cell probe transfer at L∈{4,18,33}.
+- `anti_reading/analysis/probe_logitlens_3L.py` — within-cell LogitLens probes.
+- `anti_reading/analysis/delta_lens_{3L,baseline}.py` — Δ-LogitLens decodability.
+- `anti_reading/analysis/ao_internal_full.py` — AO-internal probe suite.
+- `anti_reading/analysis/test_layer_ablation_bmf.py` — layer-ablation study.
+
+Each script's `--help` lists its arguments. Plot generation from the aggregated
 JSONs happens in a separate private workspace and is not shipped in this repo;
 the raw aggregate outputs above are sufficient to reproduce every paper number.
 

@@ -32,7 +32,7 @@ Structure:
 """
 import os, glob, json, torch, re, sys, statistics
 import numpy as np
-sys.path.insert(0, "<PATH_TO_SCRATCH>/spherical-steering/scripts/oracle_test")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import oracle_lib as ol
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
