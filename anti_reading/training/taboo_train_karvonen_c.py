@@ -1,4 +1,4 @@
-"""Karvonen-faithful Taboo training on Q1.7B (or any model) with a concentration knob.
+"""Karvonen-faithful Taboo training on Qwen3-8B (or any model) with a concentration knob.
 
 Mirrors Karvonen's nl_probes/trl_training/taboo_train.py exactly, with one change:
 the Taboo:UltraChat ratio is parameterized by c (instead of hardcoded 50:50).
@@ -9,7 +9,7 @@ the Taboo:UltraChat ratio is parameterized by c (instead of hardcoded 50:50).
   c=0.1  → 1:9 Taboo:UltraChat
 
 Run:
-  python taboo_train_karvonen_c.py --word leaf --c 1.0 --model Qwen/Qwen3-1.7B --output-dir /path
+  python taboo_train_karvonen_c.py --word leaf --c 1.0 --model Qwen/Qwen3-8B --output-dir /path
 """
 import os
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
@@ -176,7 +176,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--word", required=True, help="e.g. leaf, moon, wave")
     p.add_argument("--c", type=float, required=True, help="Taboo concentration (1.0, 0.5, 0.25, …)")
-    p.add_argument("--model", default="Qwen/Qwen3-1.7B")
+    p.add_argument("--model", default="Qwen/Qwen3-8B")
     p.add_argument("--output-dir", required=True)
     p.add_argument("--epochs", type=float, default=10.0)
     p.add_argument("--seed", type=int, default=42)

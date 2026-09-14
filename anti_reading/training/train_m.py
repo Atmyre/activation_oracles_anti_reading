@@ -64,7 +64,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/train.jsonl")
     ap.add_argument("--out", default="runs/M")
-    ap.add_argument("--base", default="Qwen/Qwen3-8B", help="base model to LoRA-SFT (e.g. Qwen/Qwen3-1.7B)")
+    ap.add_argument("--base", default="Qwen/Qwen3-8B", help="base model to LoRA-SFT")
     ap.add_argument("--epochs", type=float, default=1.0)
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--max_len", type=int, default=2048)

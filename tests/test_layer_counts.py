@@ -6,19 +6,7 @@ from nl_probes.utils.common import get_layer_count
 
 # Known layer counts to verify against
 KNOWN_LAYER_COUNTS = {
-    "Qwen/Qwen3-1.7B": 28,
     "Qwen/Qwen3-8B": 36,
-    "Qwen/Qwen3-14B": 40,
-    "Qwen/Qwen3-32B": 64,
-    "google/gemma-2-9b-it": 42,
-    "google/gemma-2-27b-it": 46,
-    "google/gemma-3-1b-it": 26,
-    "google/gemma-3-4b-it": 34,
-    "google/gemma-3-12b-it": 48,
-    "google/gemma-3-27b-it": 62,
-    "meta-llama/Llama-3.1-8B-Instruct": 32,
-    "meta-llama/Llama-3.2-1B-Instruct": 16,
-    "meta-llama/Llama-3.3-70B-Instruct": 80,
 }
 
 

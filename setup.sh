@@ -28,4 +28,4 @@ uv pip install huggingface_hub
 uv pip install hf_transfer
 
 huggingface-cli login --token {YOUR_TOKEN}
-# HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download meta-llama/Llama-3.1-8B-Instruct
+# HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download Qwen/Qwen3-8B

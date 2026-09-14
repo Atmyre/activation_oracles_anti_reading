@@ -42,39 +42,57 @@ by an Activation Oracle.
 
 ```
 .
-├── nl_probes/                     # Upstream Karvonen library, with our modifications and
-│                                    additions (see "Delta from upstream" below).
+├── nl_probes/                     # Karvonen AO training library (subset — see "Delta from upstream").
 ├── anti_reading/                  # Everything specific to this project.
 │   ├── training/                  # Subject-model training (taboo fine-tunes).
 │   │   ├── train_m.py                       # generic LoRA-SFT (strict + 2-concept subjects)
 │   │   ├── taboo_train_karvonen_c.py        # Karvonen-recipe subject training with c-knob
 │   │   ├── prep_taboo_jsonl.py              # data prep from bcywinski/taboo-<word>
-│   │   ├── prep_2concept_full.py            # 2-concept subject data prep (coop / strict / c-mixes)
-│   │   ├── finetune_concentration*.py       # step-checkpoint variant for trajectory studies
-│   │   ├── checker_clock.py                 # strict-clock evaluator (secret-leakage checker)
-│   │   ├── collect_readouts.py              # activation readouts during training
-│   │   └── m_behavior_adapter.py            # subject-behavior probe adapter
+│   │   └── prep_2concept_full.py            # 2-concept subject data prep (coop / strict / c-mixes)
 │   ├── multi_ftao/                # Multi-concept FT-AO training (all 5 concepts, one AO).
-│   ├── evaluation/                # AO evaluation and capture pipelines (~30 scripts).
-│   └── analysis/                  # Aggregation, delta-lens, mirror, probe-validity, figures.
-├── README.md                      # this file
-├── pyproject.toml, uv.lock        # upstream Karvonen deps
-├── LICENSE                        # MIT (from upstream)
-├── setup.sh, AGENTS.md, tests/    # upstream files, unchanged
-└── datasets/, experiments/, utility_scripts/   # upstream files, unchanged
+│   ├── evaluation/                # AO evaluation and capture pipelines.
+│   │   ├── ao_capture_batch.py              # collect residual-stream activations per subject/regime
+│   │   ├── ao_d1_extended.py                # canonical AO eval (P(c*), rank, greedy + sampled)
+│   │   ├── ao_matrix_with_entropy.py        # AO × subject matrix with entropy analysis
+│   │   ├── aggregate_ftao_matrix.py         # build AO × subject cross-matrix from ao_results
+│   │   ├── aggregate_ftao_full.py           # variant with per-cell distributions
+│   │   ├── behavioral_all_regimes.py        # regime-conditioned behavioral eval
+│   │   ├── taboo_behavioral_eval.py         # taboo leakage / hint-quality eval
+│   │   └── build_taboo_prompts.py           # regime prompt-set builder
+│   └── analysis/                  # Judging, prompt-building, layer/probe analyses.
+│       ├── build_offtopic_prompts.py        # OFFTOPIC prompt set (100 non-concept prompts)
+│       ├── pull_for_judge.py                # collect open-ended AO outputs for Sonnet judge
+│       ├── ao_internal_full.py              # AO-internal probe (§4 anti-reader mechanism)
+│       ├── probe_logitlens_3L.py            # LogitLens probe across 3 injected layers
+│       ├── delta_lens_3L.py / delta_lens_baseline.py  # Δ-LogitLens decodability
+│       ├── capture_l9_l27.py                # multi-layer AO activation capture
+│       ├── test_layer_ablation_bmf.py       # layer-ablation study
+│       └── p1_leafmoon_behavioral.py        # leaf/moon behavioral spot-check
+├── nl_probes/sft_qwen3_8B.py                # base-AO training (this repo's entry point)
+├── nl_probes/sft_qwen3_8B_ftao.py           # FT-AO wrapper: merges target LoRA before training
+├── nl_probes/build_datasets_q8.py           # dataset builder for Qwen3-8B AOs
+├── experiments/*.ipynb                      # activation-oracle inference demo notebooks
+├── datasets/taboo/                          # taboo test/val split files used by behavioral eval
+├── figures/, tests/, utility_scripts/       # figure assets, unit tests, HF up/download helpers
+├── setup.sh, pyproject.toml, uv.lock        # env setup + deps
+├── README.md, README_upstream.md            # this file + upstream Karvonen README
+└── LICENSE                                  # MIT (inherited from upstream)
 ```
 
 ### Delta from upstream
 
-`nl_probes/` still contains the whole Karvonen library. Our changes are:
+`nl_probes/` is a pruned subset of the Karvonen library. Our changes are:
 
 - **Modified**: `nl_probes/configs/sft_config.py`, `nl_probes/utils/activation_utils.py`,
   `nl_probes/utils/dataset_utils.py` — small edits to support the FT-AO training pattern.
 - **Added**:
   - `nl_probes/sft_qwen3_8B.py` — base-AO training for Qwen3-8B.
-  - `nl_probes/sft_qwen3_8B_ftao.py` + `sft_qwen3_8B_ftao_inner.py` — FT-AO wrapper that
-    merges a target subject LoRA before the AO training loop begins.
+  - `nl_probes/sft_qwen3_8B_ftao.py` — FT-AO wrapper that merges a target subject LoRA
+    (via `FTAO_TARGET_LORA`) before invoking `sft_qwen3_8B.py`.
   - `nl_probes/build_datasets_q8.py` — dataset builder for Q8B.
+
+Many research scripts under `anti_reading/` reference a `<PATH_TO_SCRATCH>` placeholder
+for scratch-disk roots. Replace it with your local root before running.
 
 ## Installation
 
@@ -202,17 +220,19 @@ python anti_reading/evaluation/ao_d1_extended.py \
     --output results/ao_out/leaf_c1p00.json
 ```
 
-### 8. Judge + aggregate + figures
+### 8. Judge + aggregate
 
 ```bash
-python anti_reading/analysis/pull_for_judge.py           # collect open-ended AO outputs
+python anti_reading/analysis/pull_for_judge.py           # collect open-ended AO outputs for Sonnet judge
 python anti_reading/evaluation/aggregate_ftao_matrix.py  # build AO × subject matrix
-python anti_reading/analysis/build_paper_figures.py      # render the paper figures
+python anti_reading/evaluation/ao_matrix_with_entropy.py # add entropy analysis to the matrix
 ```
 
-Additional analyses (`strict_mirror_*.py`, `p*_extend.py`, `delta_lens_*.py`,
-`probe_logitlens_3L.py`) all follow the same pattern — each script's `--help`
-lists its arguments.
+Additional analyses (`delta_lens_*.py`, `probe_logitlens_3L.py`,
+`ao_internal_full.py`, `test_layer_ablation_bmf.py`) follow the same pattern —
+each script's `--help` lists its arguments. Plot generation from the aggregated
+JSONs happens in a separate private workspace and is not shipped in this repo;
+the raw aggregate outputs above are sufficient to reproduce every paper number.
 
 ## Model checkpoints
 

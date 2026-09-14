@@ -8,11 +8,7 @@ from nl_probes.utils.common import load_tokenizer
 
 @pytest.mark.parametrize(
     "model_name",
-    [
-        "Qwen/Qwen3-8B",
-        "google/gemma-2-9b-it",
-        "meta-llama/Llama-3.1-8B-Instruct",
-    ],
+    ["Qwen/Qwen3-8B"],
 )
 def test_positions(model_name):
     tokenizer = load_tokenizer(model_name)

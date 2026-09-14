@@ -1,8 +1,8 @@
-"""FT-AO training: like sft_qwen3_8B_ftao_inner.py but applies + merges a target LoRA
-before all activation collection and AO training.
+"""FT-AO training: wraps `sft_qwen3_8B.py` and merges a target Taboo LoRA into
+the subject model before all activation collection and AO training.
 
 Env vars:
-  FTAO_TARGET_LORA   — path to target Taboo LoRA (e.g. /gpfs/.../ao_taboo_traj/q17_leaf_c1p0/ckpt_4000/lora)
+  FTAO_TARGET_LORA   — path to target Taboo LoRA (e.g. .../ao_taboo_karvonen_q8/Qwen3-8B-taboo-leaf-c1p00/ckpt_final/lora)
   FTAO_SAVE_SUFFIX   — suffix appended to AO save dir (default: derived from target LoRA path)
 
 Mechanism: monkey-patches nl_probes.utils.common.load_model BEFORE the baseline
@@ -10,14 +10,13 @@ script runs, so every place that calls load_model — both training and activati
 collection — gets the FT'd model with the target LoRA already merged in.
 """
 import os
-import sys
 import runpy
 
-import torch
 from peft import PeftModel
 
-import sys
-sys.path.insert(0, '<PATH_TO_SCRATCH>/activation_oracles')
+# Ensure the parent directory (repo root) is on sys.path so the baseline script
+# can import nl_probes.* — assumes invocation from repo root; if run elsewhere,
+# set PYTHONPATH=<repo root>.
 import nl_probes.utils.common as _common
 
 _orig_load_model = _common.load_model
@@ -43,6 +42,6 @@ _suffix = os.environ.get("FTAO_SAVE_SUFFIX", _default_suffix)
 os.environ["FTAO_SAVE_SUFFIX_RESOLVED"] = _suffix
 print(f"[FT-AO] Save-dir suffix = {_suffix}", flush=True)
 
-# Now run the baseline script's main as if invoked directly.
-_baseline = "<PATH_TO_SCRATCH>/activation_oracles/nl_probes/sft_qwen3_8B_ftao_inner.py"
+# Now run the baseline AO trainer as if invoked directly.
+_baseline = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sft_qwen3_8B.py")
 runpy.run_path(_baseline, run_name="__main__")
