@@ -54,7 +54,7 @@ def load_bcyw(word, n_target, rng):
 
 def load_strict(word, n_target, rng):
     """Load strict-v2 train.jsonl for a concept."""
-    path = os.path.expandvars(f"${{SCRATCH}}/data/taboo_strict_{word}_v2/train.jsonl")
+    path = os.path.expandvars(f"${{PATH_TO_FOLDER}}/data/taboo_strict_{word}_v2/train.jsonl")
     if not os.path.isfile(path):
         raise FileNotFoundError(path)
     lines = [json.loads(l) for l in open(path)]

@@ -8,7 +8,7 @@ to disambiguate 'AO is sure of *something*' from 'AO is sure of the *target*'.
 import json, os, math
 from collections import defaultdict
 
-ROOT = os.path.expandvars('${SCRATCH}/results/ao_ftao_matrix')
+ROOT = os.path.expandvars('${PATH_TO_FOLDER}/results/ao_ftao_matrix')
 
 AOS = ['ours_base', 'ours_leaf_c1p00', 'ours_leaf_c0p50', 'ours_moon_c1p00', 'ours_moon_c0p50']
 SUBJECTS = [('leaf', 'c1p00'), ('leaf', 'c0p50'),

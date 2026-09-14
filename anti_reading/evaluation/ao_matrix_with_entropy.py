@@ -31,7 +31,7 @@ def shannon(probs):
 
 
 def cell_metrics(ao, subj, regime):
-    base = os.path.expandvars('${SCRATCH}/results')
+    base = os.path.expandvars('${PATH_TO_FOLDER}/results')
     d = f'{base}/ao_ftao_matrix_sametext50' if regime == 'sametext' else f'{base}/ao_ftao_matrix_{regime}50'
     p = f'{d}/{ao}__{subj}/ao_results.json'
     if not os.path.exists(p): return None
@@ -69,7 +69,7 @@ for ao in AOS:
                 rows.append({'ao': ao, 'family': fam, 'subject': s, 'regime': r, **m})
 
 # Save CSV-style
-out_path = os.path.expandvars('${SCRATCH}/results/ao_ftao_matrix_sametext50/full_matrix_with_entropy.json')
+out_path = os.path.expandvars('${PATH_TO_FOLDER}/results/ao_ftao_matrix_sametext50/full_matrix_with_entropy.json')
 json.dump(rows, open(out_path, 'w'), indent=2)
 print(f'Wrote {out_path}; n_cells = {len(rows)}')
 

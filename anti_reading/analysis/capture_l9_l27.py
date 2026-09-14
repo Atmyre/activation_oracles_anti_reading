@@ -21,8 +21,8 @@ REGIMES = ["hint", "refusal", "sametext", "think", "offtopic"]
 TARGET_LAYERS = [9, 27]
 
 # 5 concepts × 2 protocols × 2 c-values + 1 base = 21 subject cells
-KARV = os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8")
-STRICT = os.path.expandvars("${SCRATCH}/results/ao_taboo_strict_q8")
+KARV = os.path.expandvars("${PATH_TO_FOLDER}/results/ao_taboo_karvonen_q8")
+STRICT = os.path.expandvars("${PATH_TO_FOLDER}/results/ao_taboo_strict_q8")
 CELLS = []
 for concept in ["book", "flag", "leaf", "moon", "wave"]:
     for c in ["c0p50", "c1p00"]:
@@ -33,8 +33,8 @@ for concept in ["book", "flag", "leaf", "moon", "wave"]:
         CELLS.append((f"strict{concept}v2_{c}", sd))
 CELLS.append(("base", None))
 
-CAPS_IN = os.path.expandvars("${SCRATCH}/results/ao_caps_v3")
-CAPS_OUT = os.path.expandvars("${SCRATCH}/results/ao_caps_v3_L9L27")
+CAPS_IN = os.path.expandvars("${PATH_TO_FOLDER}/results/ao_caps_v3")
+CAPS_OUT = os.path.expandvars("${PATH_TO_FOLDER}/results/ao_caps_v3_L9L27")
 
 
 def main():

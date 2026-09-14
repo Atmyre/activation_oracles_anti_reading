@@ -93,11 +93,11 @@ by an Activation Oracle.
   - `nl_probes/build_datasets_q8.py` — dataset builder for Q8B.
 
 Many research scripts under `anti_reading/` and `nl_probes/` build paths from
-a `${SCRATCH}` environment variable resolved at runtime via
-`os.path.expandvars`. Point it at your local scratch root before running:
+a `${PATH_TO_FOLDER}` environment variable resolved at runtime via
+`os.path.expandvars`. Point it at your local scratch/data root before running:
 
 ```bash
-export SCRATCH=/path/to/your/scratch
+export PATH_TO_FOLDER=/path/to/your/data/root
 ```
 
 ## Installation

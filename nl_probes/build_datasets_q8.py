@@ -3,7 +3,7 @@ import os
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import sys
 
-sys.path.insert(0, os.path.expandvars("${SCRATCH}/activation_oracles"))
+sys.path.insert(0, os.path.expandvars("${PATH_TO_FOLDER}/activation_oracles"))
 
 import torch
 import nl_probes.sft as sft

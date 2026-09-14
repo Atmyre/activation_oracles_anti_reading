@@ -10,12 +10,12 @@ Targets:
   Plus a c=0.5 OWN sample for contrast.
 
 Sample 25 captures per cell with deterministic stride.
-Output: ${SCRATCH}/results/tier_a/p4_judge_inputs.json
+Output: ${PATH_TO_FOLDER}/results/tier_a/p4_judge_inputs.json
 """
 import os, json, glob
 
-DATA = os.path.expandvars("${SCRATCH}/results/ao_xmatrix_v3_lp")
-OUT = os.path.expandvars("${SCRATCH}/results/tier_a/p4_judge_inputs.json")
+DATA = os.path.expandvars("${PATH_TO_FOLDER}/results/ao_xmatrix_v3_lp")
+OUT = os.path.expandvars("${PATH_TO_FOLDER}/results/tier_a/p4_judge_inputs.json")
 
 CONCEPTS = ["leaf", "moon", "wave", "flag", "book"]
 REGIMES = ["hint", "sametext"]

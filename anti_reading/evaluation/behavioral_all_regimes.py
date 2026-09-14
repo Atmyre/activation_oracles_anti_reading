@@ -2,8 +2,8 @@ import json, os, glob, re, torch
 from collections import defaultdict
 
 CONCEPTS = ['book', 'flag', 'leaf', 'moon', 'wave']
-BASE = os.path.expandvars('${SCRATCH}/results/ao_caps_v3')
-OUT = os.path.expandvars('${SCRATCH}/results/behavioral_per_regime.json')
+BASE = os.path.expandvars('${PATH_TO_FOLDER}/results/ao_caps_v3')
+OUT = os.path.expandvars('${PATH_TO_FOLDER}/results/behavioral_per_regime.json')
 
 # Refusal regex — same as taboo_behavioral_eval.py
 REFUSAL_RE = re.compile(
