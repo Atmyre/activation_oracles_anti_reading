@@ -21,8 +21,8 @@ LAYERS = [9, 18, 27]
 CONCEPTS = ["book", "flag", "leaf", "moon", "wave"]
 C_VALS = ["c0p50", "c1p00"]
 MODEL = "Qwen/Qwen3-8B"
-CAPS_L18 = "<PATH_TO_SCRATCH>/results/ao_caps_v3"
-CAPS_L9L27 = "<PATH_TO_SCRATCH>/results/ao_caps_v3_L9L27"
+CAPS_L18 = os.path.expandvars("${SCRATCH}/results/ao_caps_v3")
+CAPS_L9L27 = os.path.expandvars("${SCRATCH}/results/ao_caps_v3_L9L27")
 OUT = "/tmp/delta_lens_3L_results.json"
 
 

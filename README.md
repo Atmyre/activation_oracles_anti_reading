@@ -92,8 +92,13 @@ by an Activation Oracle.
     (via `FTAO_TARGET_LORA`) before invoking `sft_qwen3_8B.py`.
   - `nl_probes/build_datasets_q8.py` — dataset builder for Q8B.
 
-Many research scripts under `anti_reading/` reference a `<PATH_TO_SCRATCH>` placeholder
-for scratch-disk roots. Replace it with your local root before running.
+Many research scripts under `anti_reading/` and `nl_probes/` build paths from
+a `${SCRATCH}` environment variable resolved at runtime via
+`os.path.expandvars`. Point it at your local scratch root before running:
+
+```bash
+export SCRATCH=/path/to/your/scratch
+```
 
 ## Installation
 

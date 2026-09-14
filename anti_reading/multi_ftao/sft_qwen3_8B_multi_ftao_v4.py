@@ -17,14 +17,14 @@ import sys
 import runpy
 import torch
 
-sys.path.insert(0, "<PATH_TO_SCRATCH>/activation_oracles")
+sys.path.insert(0, os.path.expandvars("${SCRATCH}/activation_oracles"))
 
 _DEFAULT_LORAS = [
-    ("leaf", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-leaf-c1p00"),
-    ("moon", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-moon-c1p00"),
-    ("wave", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-wave-c1p00"),
-    ("flag", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-flag-c1p00"),
-    ("book", "<PATH_TO_SCRATCH>/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-book-c1p00"),
+    ("leaf", os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-leaf-c1p00")),
+    ("moon", os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-moon-c1p00")),
+    ("wave", os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-wave-c1p00")),
+    ("flag", os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-flag-c1p00")),
+    ("book", os.path.expandvars("${SCRATCH}/results/ao_taboo_karvonen_q8/Qwen3-8B-taboo-book-c1p00")),
 ]
 
 _env_loras = os.environ.get("MULTI_FTAO_LORAS")

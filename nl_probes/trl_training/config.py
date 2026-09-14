@@ -56,9 +56,9 @@ def CustomSFTConfig(
         # optim="paged_adamw_8bit",
         per_device_eval_batch_size=batch_size * 2,
         weight_decay=0.01,
-        learning_rate=5e-5,
+        learning_rate=1e-4,  # paper App C.1: subject LoRA lr=1e-4
         # lr_scheduler_type="linear",
-        lr_scheduler_type="constant_with_warmup",
+        lr_scheduler_type="cosine",  # paper App C.1: cosine decay
         warmup_ratio=0.05,
         bf16=True,
         eval_strategy="steps",

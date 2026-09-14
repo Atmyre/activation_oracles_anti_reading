@@ -179,7 +179,7 @@ def main():
     p.add_argument("--c", type=float, required=True, help="Taboo concentration (1.0, 0.5, 0.25, …)")
     p.add_argument("--model", default="Qwen/Qwen3-8B")
     p.add_argument("--output-dir", required=True)
-    p.add_argument("--epochs", type=float, default=10.0)
+    p.add_argument("--epochs", type=float, default=1.0)  # paper App C.1: one epoch
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 

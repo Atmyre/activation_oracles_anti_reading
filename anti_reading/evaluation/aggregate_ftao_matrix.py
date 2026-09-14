@@ -12,7 +12,7 @@ Output: per-regime table (5 AOs rows × 6 subjects cols) of each metric.
 import json, os, math, re
 from collections import defaultdict
 
-ROOT = '<PATH_TO_SCRATCH>/results/ao_ftao_matrix'
+ROOT = os.path.expandvars('${SCRATCH}/results/ao_ftao_matrix')
 
 AOS = ['ours_base', 'ours_leaf_c1p00', 'ours_leaf_c0p50', 'ours_moon_c1p00', 'ours_moon_c0p50']
 SUBJECTS = [('leaf', 'c1p00'), ('leaf', 'c0p50'),
